@@ -32,4 +32,5 @@ void Sprite::Draw()
     }
 
     DrawTexture(m_Texture, m_Transform.GetGlobalPosition().GetX(), m_Transform.GetGlobalPosition().GetY(), WHITE);
+    // DrawTexture(m_Texture, m_Transform.GetParent()->GetGlobalPosition().GetX(), m_Transform.GetParent()->GetGlobalPosition().GetY(), WHITE);
 }

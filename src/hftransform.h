@@ -23,6 +23,8 @@ class HFTransform : public Component
 
         void SetParentLink(HFTransform* parent, HFTransform* child);
 
+        virtual ~HFTransform() {}
+
     private:
         virtual void Update(double deltaTime) {}
         virtual void Ready() {}

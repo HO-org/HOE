@@ -1,12 +1,12 @@
 #pragma once
-#include "render_object.h"
+#include "render_component.h"
 #include "raylib.h"
 #include "hfmath.h"
 #include "hftransform.h"
 
-class RenderObject;
+class RenderComponent;
 
-class Sprite : public RenderObject
+class Sprite : public RenderComponent
 {
     public:
         Sprite() {}
@@ -17,6 +17,8 @@ class Sprite : public RenderObject
         virtual void Ready() override;
 
         void Load(const char* path);
+
+        virtual ~Sprite() {}
 
         Texture2D GetTexture() { return m_Texture; }
 

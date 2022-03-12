@@ -2,11 +2,15 @@
 #include "world_component.h"
 
 
-class RenderObject : public WorldComponent
+class RenderComponent : public WorldComponent
 {
     public:
+        RenderComponent() {}
+
         virtual void Update(double deltaTime) {}
         virtual void Ready() {}
 
         virtual void Draw();
+
+        virtual ~RenderComponent() {}
 };

@@ -13,6 +13,7 @@ Player g_Player = Player();
 
 Game& g_Game = Game::GetInstance();
 
+void AddComponentsToGame();
 void Update(double deltaTime);
 void Draw(double deltaTime);
 
@@ -23,7 +24,9 @@ int main(void)
     InitWindow(g_Game.getScreenWidth(), g_Game.getScreenHeight(), "Raylib Game!");
     // SetTargetFPS(144);
 
-    g_Player.Ready();
+    AddComponentsToGame();
+
+    g_Game.ReadyComponents();
 
     double lastTime = GetTime();
 
@@ -41,6 +44,15 @@ int main(void)
     }
 }
 
+
+void AddComponentsToGame()
+{
+    g_Game.AddComponent(&g_Player);
+    g_Game.AddComponent(&g_Player.m_Sprite);
+    g_Game.AddRenderComponents(&g_Player.m_Sprite);
+}
+
+
 void UpdateFPS(double deltaTime)
 {
     g_TimeSinceUpdatedFPS += deltaTime;
@@ -54,7 +66,7 @@ void UpdateFPS(double deltaTime)
 void Update(double deltaTime)
 {
     UpdateFPS(deltaTime);
-    g_Player.Update(deltaTime);
+    g_Game.UpdateComponents(deltaTime);
 }
 
 
@@ -64,9 +76,7 @@ void Draw(double deltaTime)
 
     ClearBackground(WHITE);
 
-    // DrawTexture(g_Player.getTexture(), g_Player.GetPosition().GetX(), g_Player.GetPosition().GetY(), WHITE);
-
-    g_Player.m_Sprite.Draw();
+    g_Game.DrawComponents();
 
     DrawText(TextFormat("FPS: %s", std::to_string((int)g_FPS).c_str()), 50, 50, 24, BLACK);
 

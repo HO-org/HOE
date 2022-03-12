@@ -26,6 +26,8 @@ class Player : public WorldComponent
         virtual void Update(double deltaTime) override;
         virtual void Ready() override;
 
+        virtual ~Player() {}
+
         // HFMath::Vector2 GetPosition() { return m_Position; }
         
         Sprite m_Sprite;
