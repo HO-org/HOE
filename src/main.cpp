@@ -1,10 +1,8 @@
 #include "raylib.h"
 #include "player.h"
+#include "game.h"
 #include <iostream>
 #include <string>
-
-const int screenWidth = 800;
-const int screenHeight = 600;
 
 const float g_FPS_UPDATE_INTERVAL = 0.1f;
 float g_TimeSinceUpdatedFPS = 0.0f;
@@ -13,19 +11,19 @@ float g_FPS = 0.0f;
 
 Player g_Player = Player();
 
+Game& g_Game = Game::GetInstance();
+
 void Update(double deltaTime);
 void Draw(double deltaTime);
 
 int main(void)
 {
-    InitWindow(screenWidth, screenHeight, "Game!");
-    SetTargetFPS(5000000000);
+    g_Game.initalize(800, 600);
 
-    g_Player.Ready(screenWidth, screenHeight);
-    // g_Player.m_Texture = LoadTexture("../resources/player.png");
-    // g_Player.m_PosX = (float)screenWidth / 2;
-    // g_Player.m_PosY = (float)screenHeight / 2;
+    InitWindow(g_Game.getScreenWidth(), g_Game.getScreenHeight(), "Raylib Game!");
+    // SetTargetFPS(144);
 
+    g_Player.Ready();
 
     double lastTime = GetTime();
 
@@ -66,9 +64,16 @@ void Draw(double deltaTime)
 
     ClearBackground(WHITE);
 
-    DrawTexture(g_Player.getTexture(), g_Player.getPosX(), g_Player.getPosY(), WHITE);
+    // DrawTexture(g_Player.getTexture(), g_Player.GetPosition().GetX(), g_Player.GetPosition().GetY(), WHITE);
+
+    g_Player.m_Sprite.Draw();
 
     DrawText(TextFormat("FPS: %s", std::to_string((int)g_FPS).c_str()), 50, 50, 24, BLACK);
+
+    // int rectWidth = 35;
+    // int rectLength = 500;
+    // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
+    DrawRectangle(((int)g_Game.getScreenWidth() / 2), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
 
     EndDrawing();
 }

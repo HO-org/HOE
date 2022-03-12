@@ -1,7 +1,31 @@
 #include "player.h"
+#include "game.h"
+#include <iostream>
 
+void Player::Ready()
+{
+    // m_Texture = LoadTexture("../resources/player.png");
+    m_Sprite.Load("../resources/player.png");
+    HFMath::Vector2 startPos;
+    startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);
+    startPos.SetY((float)Game::GetInstance().getScreenHeight() / 2);
+    m_Transform.SetGlobalPosition(startPos);
+
+    HFMath::Vector2 offset = HFMath::Vector2(50.0f, 50.0f);
+    m_Sprite.m_Transform.SetLocalPosition(m_Sprite.m_Transform.GetGlobalPosition() + offset);
+    m_Transform.AddChild(&m_Sprite.m_Transform);
+    // std::cout << (m_Sprite.m_Transform.GetParent() == NULL) << std::endl;
+    // std::cout << m_Sprite.m_Transform.GetLocalPosition() << std::endl;
+    std::cout << m_Sprite.m_Transform.GetParent()->GetLocalPosition() << std::endl;
+}
 
 void Player::Update(double deltaTime)
+{
+    Move(deltaTime);
+}
+
+
+void Player::Move(double deltaTime)
 {
     float speed = 100.0f;
 
@@ -18,21 +42,21 @@ void Player::Update(double deltaTime)
     }
     if (IsKeyDown(KEY_W))
     {
-        dirY += 1.0f;
+        dirY -= 1.0f;
     }
     if (IsKeyDown(KEY_S))
     {
-        dirY -= 1.0f;
+        dirY += 1.0f;
     }
 
-    m_PosX += dirX * speed * deltaTime;
-    m_PosY -= dirY * speed * deltaTime;
-}
+    HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
+    dirVec = dirVec.Normalized();
+    
+    HFMath::Vector2 velocity = dirVec * speed * deltaTime;
+    // HFMath::Vector2 spritePos = m_Sprite.m_Transform.GetGlobalPosition();
+    // spritePos += velocity;
+    // m_Sprite.m_Transform.SetGlobalPosition(spritePos);
+    m_Transform.SetGlobalPosition(m_Transform.GetGlobalPosition() + velocity);
 
-
-void Player::Ready(int screenWidth, int screenHeight)
-{
-    m_Texture = LoadTexture("../resources/player.png");
-    m_PosX = (float)screenWidth / 2;
-    m_PosY = (float)screenHeight / 2;
+    // std::cout << velocity << std::endl;
 }
