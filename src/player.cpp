@@ -1,10 +1,12 @@
 #include "player.h"
 #include "game.h"
 #include <iostream>
+#include "hflog.h"
 
 void Player::Ready()
 {
     // m_Texture = LoadTexture("../resources/player.png");
+    // HFLog::Log("Tried loading sprite");
     m_Sprite.Load("../resources/player.png");
     HFMath::Vector2 startPos;
     startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);

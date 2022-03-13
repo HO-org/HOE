@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "player.h"
 #include "game.h"
+#include "enums.h"
 #include <iostream>
 #include <string>
 
@@ -47,9 +48,10 @@ int main(void)
 
 void AddComponentsToGame()
 {
-    g_Game.AddComponent(&g_Player);
-    g_Game.AddComponent(&g_Player.m_Sprite);
-    g_Game.AddRenderComponents(&g_Player.m_Sprite);
+    g_Game.AddComponent(&g_Player, READYUPDATE);
+    g_Game.AddComponent(&g_Player, READYUPDATE);
+    g_Game.AddComponent(&g_Player.m_Sprite, READYUPDATE);
+    g_Game.AddRenderComponent(&g_Player.m_Sprite);
 }
 
 

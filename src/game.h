@@ -1,6 +1,11 @@
 #pragma once
-#include "component.h"
+// #include "component.h"
+#include "enums.h"
+#include "render_component.h"
+#include "collision_component.h"
 #include <vector>
+
+class Component;
 
 class Game
 {
@@ -16,21 +21,29 @@ class Game
 
         void initalize(int screenWidth, int screenHeight) { m_ScreenWidth = screenWidth; m_ScreenHeight = screenHeight; }
 
-        std::vector<Component*> m_Components;
+        std::vector<Component*> m_ReadyComponents;
+        std::vector<Component*> m_UpdateComponents;
         std::vector<RenderComponent*> m_RenderComponents;
+        std::vector<CollisionComponent*> m_CollisionComponents;
 
-        void ReadyComponents() { for (Component* component : m_Components ) { component->Ready(); } }
-        void UpdateComponents(double deltaTime) { for ( Component* component : m_Components ) { component->Update(deltaTime); } }
+        void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
+        void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
+        void AddRenderComponent(RenderComponent* component);
+        void AddCollisionComponent(CollisionComponent* component);
         void DrawComponents() { for (RenderComponent* component : m_RenderComponents) { component->Draw(); } }
-        void AddComponent(Component* component) { m_Components.push_back(component); }
-        void AddRenderComponents(RenderComponent* component) { m_RenderComponents.push_back(component); }
+        void AddComponent(Component* component, CallbackType type);
+        void RemoveComponent(Component* component, CallbackType type);
+        void RemoveRenderComponent(Component* component);
+        void RemoveCollisionComponent(Component* component);
 
     private:
         Game() {} ;
 
+        bool ComponentInVector(Component* component, std::vector<Component*> vector);
+
         int m_ScreenWidth;
         int m_ScreenHeight;
-    
+
     public:
         Game(Game const&) = delete;
         void operator=(Game const&) = delete;

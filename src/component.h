@@ -1,5 +1,5 @@
 #pragma once
-
+#include "enums.h"
 
 class Component
 {
@@ -11,4 +11,6 @@ class Component
         virtual void Ready() {}
 
         virtual ~Component() {}
+
+        CallbackType registeredWhere = NOCALLBACK;
 };
