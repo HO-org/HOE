@@ -14,7 +14,8 @@ Player g_Player = Player();
 
 Game& g_Game = Game::GetInstance();
 
-CollisionComponent g_Wall = CollisionComponent();
+CollisionComponent g_SquareCollision = CollisionComponent();
+CollisionComponent g_SquareCollision2 = CollisionComponent();
 
 void AddComponentsToGame();
 void Update(double deltaTime);
@@ -56,9 +57,12 @@ void AddComponentsToGame()
     g_Game.AddRenderComponent(&g_Player.m_Sprite);
     g_Game.AddCollisionComponent(&g_Player.m_Collider);
 
-    g_Wall.m_Transform.SetGlobalPosition(HFMath::Vector2(g_Game.getScreenWidth() / 2.0f + 200.0f, g_Game.getScreenHeight() / 2));
-    g_Wall.m_Size = HFMath::Vector2(20, 20);
-    g_Game.AddCollisionComponent(&g_Wall);
+    g_SquareCollision.m_Transform.SetGlobalPosition(HFMath::Vector2(g_Game.getScreenWidth() / 2.0f + 200.0f, g_Game.getScreenHeight() / 2));
+    g_SquareCollision.m_Size = HFMath::Vector2(20, 20);
+    g_SquareCollision2.m_Transform.SetGlobalPosition(HFMath::Vector2(g_Game.getScreenWidth() / 2.0f - 200.0f, g_Game.getScreenHeight() / 2));
+    g_SquareCollision2.m_Size = HFMath::Vector2(20, 20);
+    g_Game.AddCollisionComponent(&g_SquareCollision);
+    g_Game.AddCollisionComponent(&g_SquareCollision2);
 }
 
 
@@ -89,6 +93,7 @@ void Draw(double deltaTime)
     int rectLength = 500;
     // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
     DrawRectangle(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
+    DrawRectangle(((int)g_Game.getScreenWidth() / 2 - 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
 
     g_Game.DrawComponents();
 

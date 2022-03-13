@@ -3,6 +3,8 @@
 #include "hfmath.h"
 #include <vector>
 
+class CollisionComponent;
+
 class HFTransform : public Component
 {
     public:
@@ -15,6 +17,8 @@ class HFTransform : public Component
 
         void UpdatePosition();
 
+        void MoveTo(HFMath::Vector2 targetPos);
+
         void SetParent(HFTransform* target);
         HFTransform* GetParent() { return m_Parent; }
 
@@ -22,6 +26,10 @@ class HFTransform : public Component
         std::vector<HFTransform*> GetChildren() { return m_Children; }
 
         void SetParentLink(HFTransform* parent, HFTransform* child);
+
+        void AddCollider(CollisionComponent* collider);
+        void RemoveCollider(CollisionComponent* collider);
+        std::vector<CollisionComponent*> GetColliders() { return m_Colliders; }
 
         virtual ~HFTransform() {}
 
@@ -34,6 +42,8 @@ class HFTransform : public Component
 
         HFTransform* m_Parent;
         std::vector<HFTransform*> m_Children;
+
+        std::vector<CollisionComponent*> m_Colliders;
 
         void UpdatePositionInChildren();
 };

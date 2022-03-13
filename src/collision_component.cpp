@@ -35,9 +35,7 @@ bool CollisionComponent::IsOverlapping(CollisionComponent* other)
     float height = m_Size.GetY();
     float otherHeight = other->m_Size.GetY();
 
-    return (
-        (
-            x + width >= otherX && x < otherX + otherWidth && y + height > otherY && y < otherY + height
-        )
-    );
+    return ( x + width >= otherX && x <= otherX + otherWidth )
+           &&
+           ( y + height >= otherY && y <= otherY + otherHeight );
 }

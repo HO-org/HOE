@@ -46,6 +46,11 @@ void HFTransform::UpdatePosition()
 }
 
 
+void HFTransform::MoveTo(HFMath::Vector2 targetPos)
+{
+}
+
+
 void HFTransform::SetParent(HFTransform* target)
 {
     SetParentLink(target, this);
@@ -68,4 +73,15 @@ void HFTransform::SetParentLink(HFTransform* parent, HFTransform* child)
     child->m_Parent = parent;
 
     child->UpdatePosition();
+}
+
+
+void HFTransform::AddCollider(CollisionComponent* collider)
+{
+    m_Colliders.push_back(collider);
+}
+
+void HFTransform::RemoveCollider(CollisionComponent* collider)
+{
+    std::remove_if(m_Colliders.begin(), m_Colliders.end(), [collider](CollisionComponent* c) { return c == collider; });
 }
