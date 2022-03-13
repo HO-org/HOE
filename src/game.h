@@ -26,15 +26,16 @@ class Game
         std::vector<RenderComponent*> m_RenderComponents;
         std::vector<CollisionComponent*> m_CollisionComponents;
 
-        void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
-        void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
         void AddRenderComponent(RenderComponent* component);
         void AddCollisionComponent(CollisionComponent* component);
-        void DrawComponents() { for (RenderComponent* component : m_RenderComponents) { component->Draw(); } }
         void AddComponent(Component* component, CallbackType type);
         void RemoveComponent(Component* component, CallbackType type);
         void RemoveRenderComponent(Component* component);
         void RemoveCollisionComponent(Component* component);
+       
+        void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
+        void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
+        void DrawComponents() { for (RenderComponent* component : m_RenderComponents) { component->Draw(); } }
 
     private:
         Game() {} ;

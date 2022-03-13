@@ -14,6 +14,8 @@ Player g_Player = Player();
 
 Game& g_Game = Game::GetInstance();
 
+CollisionComponent g_Wall = CollisionComponent();
+
 void AddComponentsToGame();
 void Update(double deltaTime);
 void Draw(double deltaTime);
@@ -52,6 +54,11 @@ void AddComponentsToGame()
     g_Game.AddComponent(&g_Player, READYUPDATE);
     g_Game.AddComponent(&g_Player.m_Sprite, READYUPDATE);
     g_Game.AddRenderComponent(&g_Player.m_Sprite);
+    g_Game.AddCollisionComponent(&g_Player.m_Collider);
+
+    g_Wall.m_Transform.SetGlobalPosition(HFMath::Vector2(g_Game.getScreenWidth() / 2.0f + 200.0f, g_Game.getScreenHeight() / 2));
+    g_Wall.m_Size = HFMath::Vector2(20, 20);
+    g_Game.AddCollisionComponent(&g_Wall);
 }
 
 
@@ -78,14 +85,14 @@ void Draw(double deltaTime)
 
     ClearBackground(WHITE);
 
+    int rectWidth = 35;
+    int rectLength = 500;
+    // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
+    DrawRectangle(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
+
     g_Game.DrawComponents();
 
     DrawText(TextFormat("FPS: %s", std::to_string((int)g_FPS).c_str()), 50, 50, 24, BLACK);
-
-    // int rectWidth = 35;
-    // int rectLength = 500;
-    // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
-    DrawRectangle(((int)g_Game.getScreenWidth() / 2), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
 
     EndDrawing();
 }

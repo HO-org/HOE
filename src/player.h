@@ -4,6 +4,8 @@
 #include "sprite.h"
 #include "hftransform.h"
 #include "world_component.h"
+#include "collision_component.h"
+
 
 class Player : public WorldComponent
 {
@@ -31,6 +33,8 @@ class Player : public WorldComponent
         // HFMath::Vector2 GetPosition() { return m_Position; }
         
         Sprite m_Sprite;
+
+        CollisionComponent m_Collider = CollisionComponent();
         // Texture2D getTexture() { return m_Texture; }
 
     private:
