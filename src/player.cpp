@@ -19,6 +19,8 @@ void Player::Ready()
     m_Collider.m_Size.SetX(32.0f);
     m_Collider.m_Size.SetY(32.0f);
     m_Transform.AddChild(&m_Collider.m_Transform);
+    m_Transform.AddCollider(&m_Collider);
+
     // HFMath::Vector2 offset = HFMath::Vector2(50.0f, 50.0f);
     // m_Sprite.m_Transform.SetLocalPosition(m_Sprite.m_Transform.GetGlobalPosition() + offset);
     // std::cout << m_Sprite.m_Transform.GetParent()->GetLocalPosition() << std::endl;
@@ -60,13 +62,14 @@ void Player::Move(double deltaTime)
     dirVec = dirVec.Normalized();
     
     HFMath::Vector2 velocity = dirVec * speed * deltaTime;
-    // HFMath::Vector2 spritePos = m_Sprite.m_Transform.GetGlobalPosition();
-    // spritePos += velocity;
-    // m_Sprite.m_Transform.SetGlobalPosition(spritePos);
-    m_Transform.SetGlobalPosition(m_Transform.GetGlobalPosition() + velocity);
 
-    // HFLog::Log(TextFormat("%s", m_Collider.GetOverlappingComponents().size()));
-    std::cout << m_Collider.GetOverlappingComponents().size() << std::endl;
+    m_Transform.MoveAndCollide(m_Transform.GetGlobalPosition() + velocity);
+
+    // std::cout << "Direction: " << m_Transform.GetGlobalPosition().directionTo(m_Transform.GetGlobalPosition() + velocity) << std::endl;
+    // std::cout << "Direction: " << velocity << std::endl;
+    
+    // std::cout << m_Collider.GetOverlappingComponents().size() << std::endl;
+
     // std::cout << "velocity: " << velocity << std::endl;
     // std::cout << "position: " << m_Transform.GetGlobalPosition() << std::endl;
 }

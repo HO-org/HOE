@@ -2,6 +2,7 @@
 #include "player.h"
 #include "game.h"
 #include "enums.h"
+#include "raycast.h"
 #include <iostream>
 #include <string>
 
@@ -17,6 +18,8 @@ Game& g_Game = Game::GetInstance();
 CollisionComponent g_SquareCollision = CollisionComponent();
 CollisionComponent g_SquareCollision2 = CollisionComponent();
 
+Raycast g_raycast;
+
 void AddComponentsToGame();
 void Update(double deltaTime);
 void Draw(double deltaTime);
@@ -31,6 +34,9 @@ int main(void)
     AddComponentsToGame();
 
     g_Game.ReadyComponents();
+
+    g_raycast.m_Transform.SetGlobalPosition(HFMath::Vector2(0.0f, 0.0f));
+    g_raycast.m_Direction = HFMath::Vector2(1.0f, 0.0f);
 
     double lastTime = GetTime();
 
@@ -94,10 +100,43 @@ void Draw(double deltaTime)
     // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
     DrawRectangle(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
     DrawRectangle(((int)g_Game.getScreenWidth() / 2 - 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
+    
+    // HFMath::Vector2 wall1 = HFMath::Vector2(100.0f, 50.0f);
+    // HFMath::Vector2 wall2 = HFMath::Vector2(100.0f, -50.0f);
+    HFMath::Vector2 wall1 = HFMath::Vector2(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2));
+    HFMath::Vector2 wall2 = HFMath::Vector2(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2) + 200);
+
+    g_raycast.m_Transform.SetGlobalPosition(HFMath::Vector2(100.0f, 100.0f));
+
+    HFMath::Vector2 mousePos = HFMath::Vector2(GetMousePosition().x, GetMousePosition().y);
+
+    g_raycast.LookAt(mousePos);
+
+    IntersectResult result = g_raycast.IntersectRay(wall1, wall2);
+
+    if (result.hit)
+    {
+        DrawCircle(result.position.GetX(), result.position.GetY(), 30.0f, BLACK);
+        // std::cout << "Mouse Pos: " << mousePos << std::endl;
+        // std::cout << "Result Pos: " << result.position << std::endl;
+        std::cout << (int)result.position.GetY() - mousePos.GetY() << std::endl;
+    }
+    
+    DrawLine(wall1.GetX(), wall1.GetY(), wall2.GetX(), wall2.GetY(), ORANGE);
+
+    // RaycastHitResult result = g_raycast.CollideRay(&g_Player.m_Collider, mousePos);
+    // // std::cout << mousePos << std::endl;
+    // if (result.hit)
+    // {
+    //     DrawCircle(result.position.GetX(), result.position.GetY(), 15.0f, BLACK);
+    //     // std::cout << result.position << std::endl;
+    // }
 
     g_Game.DrawComponents();
 
     DrawText(TextFormat("FPS: %s", std::to_string((int)g_FPS).c_str()), 50, 50, 24, BLACK);
+
+    DrawCircle(g_raycast.m_Transform.GetGlobalPosition().GetX(), g_raycast.m_Transform.GetGlobalPosition().GetY(), 10.0f, GREEN);
 
     EndDrawing();
 }

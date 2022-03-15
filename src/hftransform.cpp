@@ -1,6 +1,10 @@
 #include "hftransform.h"
 #include "hfmath.h"
 #include <iostream>
+#include "collision_component.h"
+#include "hflog.h"
+#include "raycast.h"
+#include "game.h"
 // #include <algorithm>
 
 void HFTransform::UpdatePositionInChildren()
@@ -46,8 +50,90 @@ void HFTransform::UpdatePosition()
 }
 
 
-void HFTransform::MoveTo(HFMath::Vector2 targetPos)
+void HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
 {
+    bool hit = false;
+
+    // Raycast ray = Raycast();
+    // RaycastHitResult result = ray.CollideRay(targetPos);
+
+    // CollisionComponent* overlap = 
+
+    // HFMath::Vector2 tolerance = HFMath::Vector2(0.0005f, 0.0005f);
+
+    // HFMath::Vector2 normal = overlap->GetCollisionNormal(GetGlobalPosition());
+
+    // HFMath::Vector2 offset = (normal * -1 * collider->m_Size);
+
+    // SetGlobalPosition(overlap->m_Transform.GetLocalPosition() + offset);
+
+    // hit = true;
+
+    if (!hit)
+    {
+        SetGlobalPosition(targetPos);
+    }
+
+
+    // RaycastHitResult result = Raycast::RayCastRay(m_Colliders[0], GetGlobalPosition(), targetPos);
+    
+    // if (result.hit)
+    // {
+    //     HFMath::Vector2 tolerance = HFMath::Vector2(0.5f, 0.5f);
+    //     HFMath::Vector2 offset = HFMath::Vector2(
+    //         result.position.directionTo(GetGlobalPosition()) * tolerance
+    //     );
+
+    //     SetGlobalPosition(result.position + offset);
+    //     std::cout << "Target is: " << targetPos << std::endl;
+    //     std::cout << "Moved to: " << result.position + offset << std::endl;
+    // }
+    // else
+    // {
+    //     SetGlobalPosition(targetPos);
+    // }
+
+    // bool hit = false;
+
+    // for (CollisionComponent* collider : m_Colliders)
+    // {
+    //     std::vector<CollisionComponent*> overlaps = collider->GetOverlappingComponents();
+
+    //     for (CollisionComponent* overlap : overlaps)
+    //     {
+    //         // Will only run if the overlaps list isn't empy, meaning we're colliding
+
+    //         HFMath::Vector2 pos = collider->m_Transform.GetGlobalPosition();
+    //         HFMath::Vector2 otherPos = overlap->m_Transform.GetGlobalPosition();
+
+    //         HFMath::Vector2 tolerance = HFMath::Vector2(0.0005f, 0.0005f);
+
+
+
+    //         // CollidingSides collidingSides = collider->GetCollidingSides(overlap);
+
+    //         // if (collidingSides.SIDE_RIGHT)
+    //         // {
+    //         //     HFMath::Vector2 offset = HFMath::Vector2(
+    //         //         -tolerance.GetX() - collider->m_Size.GetX(),
+    //         //         pos.GetY() - otherPos.GetY()
+    //         //     );
+    //         //     SetGlobalPosition(otherPos + offset);
+    //         //     hit = true;
+    //         // }
+    //         // else if (collidingSides.SIDE_TOP)
+    //         // {
+    //         //     HFMath::Vector2 offset = HFMath::Vector2(
+    //         //         pos.GetX() - otherPos.GetX(),
+    //         //         tolerance.GetY() + overlap->m_Size.GetY()
+    //         //     );
+    //         //     SetGlobalPosition(otherPos + offset);
+    //         //     hit = true;
+    //         // }
+    //     }
+    // }
+
+    // if (!hit) { SetGlobalPosition(targetPos); }
 }
 
 

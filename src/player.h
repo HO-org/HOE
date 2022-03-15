@@ -5,7 +5,7 @@
 #include "hftransform.h"
 #include "world_component.h"
 #include "collision_component.h"
-
+#include "raycast.h"
 
 class Player : public WorldComponent
 {

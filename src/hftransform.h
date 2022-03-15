@@ -4,11 +4,16 @@
 #include <vector>
 
 class CollisionComponent;
+class Raycast;
 
 class HFTransform : public Component
 {
     public:
-        HFTransform() {}
+        HFTransform()
+        {
+            m_GlobalPosition = HFMath::Vector2::ZERO();
+            m_LocalPosition = HFMath::Vector2::ZERO();
+        }
 
         void SetGlobalPosition(HFMath::Vector2 targetPos);
         void SetLocalPosition(HFMath::Vector2 targetPos);
@@ -17,7 +22,7 @@ class HFTransform : public Component
 
         void UpdatePosition();
 
-        void MoveTo(HFMath::Vector2 targetPos);
+        void MoveAndCollide(HFMath::Vector2 targetPos);
 
         void SetParent(HFTransform* target);
         HFTransform* GetParent() { return m_Parent; }
