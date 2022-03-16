@@ -4,7 +4,7 @@
 #include "hfmath.h"
 
 
-typedef struct CollidingSides
+struct CollidingSides
 {
     int numSides = 0;
     bool SIDE_TOP = false;

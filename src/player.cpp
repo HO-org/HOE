@@ -9,8 +9,10 @@ void Player::Ready()
     // HFLog::Log("Tried loading sprite");
     m_Sprite.Load("../resources/player.png");
     HFMath::Vector2 startPos;
-    startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);
-    startPos.SetY((float)Game::GetInstance().getScreenHeight() / 2);
+    // startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);
+    // startPos.SetY((float)Game::GetInstance().getScreenHeight() / 2);
+    startPos.SetX(400);
+    startPos.SetY(300);
     m_Transform.SetGlobalPosition(startPos);
 
     m_Transform.AddChild(&m_Sprite.m_Transform);
@@ -36,8 +38,6 @@ void Player::Update(double deltaTime)
 
 void Player::Move(double deltaTime)
 {
-    float speed = 100.0f;
-
     float dirX = 0.0f;
     float dirY = 0.0f;
 
@@ -49,21 +49,28 @@ void Player::Move(double deltaTime)
     {
         dirX -= 1.0f;
     }
-    if (IsKeyDown(KEY_W))
-    {
-        dirY -= 1.0f;
-    }
-    if (IsKeyDown(KEY_S))
-    {
-        dirY += 1.0f;
-    }
 
     HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
     dirVec = dirVec.Normalized();
     
-    HFMath::Vector2 velocity = dirVec * speed * deltaTime;
+    velocity.SetX(dirVec.GetX() * speed * deltaTime);
 
-    m_Transform.MoveAndCollide(m_Transform.GetGlobalPosition() + velocity);
+    if (isOnFloor)
+    {
+        velocity.SetY(0.0f);
+
+        if(IsKeyPressed(KEY_SPACE))
+        {
+            velocity.SetY(-jumpForce);
+        }
+    }
+
+    velocity.SetY(velocity.GetY() + GRAVITY * deltaTime);
+
+    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
+    m_Transform.MoveAndCollide(xOffset);
+    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
+    isOnFloor = m_Transform.MoveAndCollide(yOffset);
 
     // std::cout << "Direction: " << m_Transform.GetGlobalPosition().directionTo(m_Transform.GetGlobalPosition() + velocity) << std::endl;
     // std::cout << "Direction: " << velocity << std::endl;

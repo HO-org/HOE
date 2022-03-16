@@ -41,6 +41,12 @@ class Player : public WorldComponent
         // HFMath::Vector2 m_Position;
 
         // Texture2D m_Texture;
+        bool isOnFloor = false;
 
+        float speed = 130.0f;
+        float jumpForce = 400.0f;
+        float GRAVITY = 1000.0f;
+
+        HFMath::Vector2 velocity;
         void Move(double deltaTime);
 };

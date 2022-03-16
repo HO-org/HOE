@@ -50,29 +50,22 @@ void HFTransform::UpdatePosition()
 }
 
 
-void HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
+bool HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
 {
-    bool hit = false;
+    HFMath::Vector2 originalPos = GetGlobalPosition();
 
-    // Raycast ray = Raycast();
-    // RaycastHitResult result = ray.CollideRay(targetPos);
+    SetGlobalPosition(targetPos);
 
-    // CollisionComponent* overlap = 
-
-    // HFMath::Vector2 tolerance = HFMath::Vector2(0.0005f, 0.0005f);
-
-    // HFMath::Vector2 normal = overlap->GetCollisionNormal(GetGlobalPosition());
-
-    // HFMath::Vector2 offset = (normal * -1 * collider->m_Size);
-
-    // SetGlobalPosition(overlap->m_Transform.GetLocalPosition() + offset);
-
-    // hit = true;
-
-    if (!hit)
+    for ( CollisionComponent* collider : m_Colliders )
     {
-        SetGlobalPosition(targetPos);
+        if (collider->GetOverlappingComponents().size())
+        {
+            SetGlobalPosition(originalPos);
+            return true;
+        }
     }
+
+    return false;
 
 
     // RaycastHitResult result = Raycast::RayCastRay(m_Colliders[0], GetGlobalPosition(), targetPos);

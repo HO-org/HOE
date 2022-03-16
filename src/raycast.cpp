@@ -20,9 +20,9 @@ CollisionComponent* Raycast::CastPoint(HFMath::Vector2 pos)
         {
             return collider;
         }
-
-        return nullptr;
     }
+
+    return nullptr;
 }
 
 // RaycastHitResult Raycast::RayCastRay(CollisionComponent* origin, HFMath::Vector2 startPos, HFMath::Vector2 targetPos)

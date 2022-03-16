@@ -74,10 +74,6 @@ void Game::AddRenderComponent(RenderComponent* component)
 
     switch (component->registeredWhere)
     {
-        case RENDER:
-            component->registeredWhere = RENDER;
-            break;
-
         case READY:
             component->registeredWhere = READYRENDER;
             break;
@@ -90,8 +86,11 @@ void Game::AddRenderComponent(RenderComponent* component)
             component->registeredWhere = READYUPDATERENDER;
             break;
         
+        case NOCALLBACK:
+            component->registeredWhere = COLLISION;
+            break;
+        
         default:
-            HFLog::Log("Tried to add a render component with an invalid type passed");
             break;
     }
 }
@@ -111,10 +110,6 @@ void Game::AddCollisionComponent(CollisionComponent* component)
 
     switch (component->registeredWhere)
     {
-        case COLLISION:
-            component->registeredWhere = COLLISION;
-            break;
-
         case READY:
             component->registeredWhere = READYCOLLISION;
             break;
@@ -127,8 +122,11 @@ void Game::AddCollisionComponent(CollisionComponent* component)
             component->registeredWhere = READYUPDATECOLLISION;
             break;
         
+        case NOCALLBACK:
+            component->registeredWhere = COLLISION;
+            break;
+        
         default:
-            HFLog::Log("Tried to add a collision component with an invalid type passed");
             break;
     }
 }

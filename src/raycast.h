@@ -33,7 +33,7 @@ class Raycast
         HFTransform m_Transform;
         HFMath::Vector2 m_Direction;
 
-        static CollisionComponent* CastPoint(HFMath::Vector2 pos);
+        CollisionComponent* CastPoint(HFMath::Vector2 pos);
 
         RaycastHitResult CollideRay(CollisionComponent* origin, HFMath::Vector2 targetPos);
 

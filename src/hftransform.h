@@ -22,7 +22,7 @@ class HFTransform : public Component
 
         void UpdatePosition();
 
-        void MoveAndCollide(HFMath::Vector2 targetPos);
+        bool MoveAndCollide(HFMath::Vector2 targetPos);
 
         void SetParent(HFTransform* target);
         HFTransform* GetParent() { return m_Parent; }
@@ -45,7 +45,7 @@ class HFTransform : public Component
         HFMath::Vector2 m_LocalPosition;
         HFMath::Vector2 m_GlobalPosition;
 
-        HFTransform* m_Parent;
+        HFTransform* m_Parent = nullptr;
         std::vector<HFTransform*> m_Children;
 
         std::vector<CollisionComponent*> m_Colliders;
