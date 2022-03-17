@@ -12,7 +12,7 @@ bool Game::ComponentInVector(Component* component, std::vector<Component*> v)
 }
 
 
-void Game::AddComponent(Component* component, CallbackType type)
+void Game::AddComponentCallback(Component* component, CallbackType type)
 {
     switch (type)
     {

@@ -40,6 +40,7 @@ int main(void)
     // SetTargetFPS(20);
 
     AddComponentsToGame();
+    g_Game.InitComponents();
 
     g_Game.ReadyComponents();
 
@@ -67,25 +68,28 @@ void AddBlocks()
 {
     for ( int i = 0; i < NUM_BLOCKS; i++ )
     {
-        g_Game.AddComponent(&g_LevelBlocks[i], READY);
-        g_Game.AddRenderComponent(&g_LevelBlocks[i]);
-        g_Game.AddCollisionComponent(&(g_LevelBlocks[i].m_Collision));
+        // g_Game.AddComponentCallback(&g_LevelBlocks[i], READY);
+        // g_Game.AddRenderComponent(&g_LevelBlocks[i]);
+        // g_Game.AddCollisionComponent(&(g_LevelBlocks[i].m_Collision));
+        g_Game.AddComponent(&g_LevelBlocks[i]);
     }
 }
 
 
 void AddComponentsToGame()
 {
-    g_Game.AddComponent(&g_Player, READYUPDATE);
-    g_Game.AddComponent(&g_Player.m_Sprite, READYUPDATE);
-    g_Game.AddRenderComponent(&g_Player.m_Sprite);
-    g_Game.AddCollisionComponent(&g_Player.m_Collider);
+    g_Game.AddComponent(&g_Player);
+    AddBlocks();
 
-    // g_Game.AddComponent(&g_Floor, READY);
+    // g_Game.AddComponentCallback(&g_Player, READYUPDATE);
+    // g_Game.AddComponentCallback(&g_Player.m_Sprite, READYUPDATE);
+    // g_Game.AddRenderComponent(&g_Player.m_Sprite);
+    // g_Game.AddCollisionComponent(&g_Player.m_Collider);
+
+    // g_Game.AddComponentCallback(&g_Floor, READY);
     // g_Game.AddRenderComponent(&g_Floor);
     // g_Game.AddCollisionComponent(&g_Floor.m_Collision);
 
-    AddBlocks();
 
     // g_SquareCollision.m_Transform.SetGlobalPosition(HFMath::Vector2(g_Game.getScreenWidth() / 2.0f + 200.0f, g_Game.getScreenHeight() / 2));
     // g_SquareCollision.m_Size = HFMath::Vector2(20, 20);

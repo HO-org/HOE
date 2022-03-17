@@ -21,6 +21,7 @@ class Block : public RenderComponent
         CollisionComponent m_Collision = CollisionComponent();
         
     private:
+        virtual void Init();
         virtual void Ready() override;
         virtual void Draw() override;
 

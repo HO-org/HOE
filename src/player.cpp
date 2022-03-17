@@ -3,6 +3,16 @@
 #include <iostream>
 #include "hflog.h"
 
+void Player::Init()
+{
+    Game& game = Game::GetInstance();
+
+    game.AddComponentCallback(this, READYUPDATE);
+    game.AddComponentCallback(&m_Sprite, READYUPDATE);
+    game.AddRenderComponent(&m_Sprite);
+    game.AddCollisionComponent(&m_Collider);
+}
+
 void Player::Ready()
 {
     // m_Texture = LoadTexture("../resources/player.png");

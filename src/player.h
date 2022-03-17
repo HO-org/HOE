@@ -25,6 +25,7 @@ class Player : public WorldComponent
             m_Transform.SetGlobalPosition(initialPos);
         }
 
+        virtual void Init();
         virtual void Update(double deltaTime) override;
         virtual void Ready() override;
 

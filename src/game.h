@@ -5,8 +5,6 @@
 #include "collision_component.h"
 #include <vector>
 
-class Component;
-
 class Game
 {
     public:
@@ -26,13 +24,16 @@ class Game
         std::vector<RenderComponent*> m_RenderComponents;
         std::vector<CollisionComponent*> m_CollisionComponents;
 
+        std::vector<Component*> GetComponents() { return m_Components; }
+        void AddComponent(Component* component) { m_Components.push_back(component); }
         void AddRenderComponent(RenderComponent* component);
         void AddCollisionComponent(CollisionComponent* component);
-        void AddComponent(Component* component, CallbackType type);
+        void AddComponentCallback(Component* component, CallbackType type);
         void RemoveComponent(Component* component, CallbackType type);
         void RemoveRenderComponent(Component* component);
         void RemoveCollisionComponent(Component* component);
-       
+
+        void InitComponents() { for (Component* component : m_Components) { component->Init(); } }
         void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
         void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
         void DrawComponents() { for (RenderComponent* component : m_RenderComponents) { component->Draw(); } }
@@ -44,6 +45,8 @@ class Game
 
         int m_ScreenWidth;
         int m_ScreenHeight;
+
+        std::vector<Component*> m_Components;
 
     public:
         Game(Game const&) = delete;
