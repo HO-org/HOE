@@ -5,6 +5,7 @@
 #include "hflog.h"
 #include "raycast.h"
 #include "game.h"
+#include <math.h>
 // #include <algorithm>
 
 void HFTransform::UpdatePositionInChildren()
@@ -56,77 +57,82 @@ bool HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
 
     SetGlobalPosition(targetPos);
 
+    HFMath::Vector2 normal;
+
     for ( CollisionComponent* collider : m_Colliders )
     {
-        if (collider->GetOverlappingComponents().size())
+        std::vector<CollisionComponent*> overlaps = collider->GetOverlappingComponents();
+        for ( CollisionComponent* overlap : overlaps )
         {
-            SetGlobalPosition(originalPos);
+            HFMath::Vector2 center = originalPos + collider->m_Size / 2;
+            HFMath::Vector2 overlapCenter = overlap->m_Transform.GetGlobalPosition() + overlap->m_Size / 2;
+            HFMath::Vector2 diff = center - overlapCenter;
+
+            bool diffPointingRight = diff.GetX() > 0;
+            bool diffPointingLeft = diff.GetX() < 0;
+            bool isInHeight = abs(diff.GetY()) <= overlap->m_Size.GetY() / 2 + collider->m_Size.GetY() / 2;
+            bool velocityGoingLeft = (targetPos - originalPos).GetX() < 0;
+            bool velocityGoingRight = (targetPos - originalPos).GetX() > 0;
+
+            bool diffPointingUp = diff.GetY() < 0;
+            bool diffPointingDown = diff.GetY() > 0;
+            bool isInWidth = abs(diff.GetX()) <= overlap->m_Size.GetX() / 2 + collider->m_Size.GetX() / 2;
+            bool velocityGoingDown = (targetPos - originalPos).GetY() > 0;
+            bool velocityGoingUp = (targetPos - originalPos).GetY() < 0;
+
+            if (diffPointingRight
+            && isInHeight
+            && velocityGoingLeft)
+            {
+                normal = HFMath::Vector2(1.0f, 0.0f);
+            }
+            if (diffPointingLeft
+            && isInHeight
+            && velocityGoingRight)
+            {
+                normal = HFMath::Vector2(-1.0f, 0.0f);
+            }
+            if (diffPointingUp
+            && isInWidth
+            && velocityGoingDown)
+            {
+                normal = HFMath::Vector2(0.0f, -1.0f);
+            }
+            if (diffPointingDown
+            && isInWidth
+            && velocityGoingUp)
+            {
+                normal = HFMath::Vector2(0.0f, 1.0f);
+            }
+
+            if (normal.Length())
+            {
+                HFMath::Vector2 newPos = center;
+
+                float tolerance = 0.00005f;
+
+                if (normal.GetX() != 0.0f)
+                {
+                    newPos.SetX(overlapCenter.GetX() + normal.GetX() * (overlap->m_Size.GetX() / 2 + collider->m_Size.GetX() / 2 + tolerance));
+                    newPos.SetY(center.GetY());
+                }
+                if (normal.GetY() != 0.0f)
+                {
+                    newPos.SetX(center.GetX());
+                    newPos.SetY(overlapCenter.GetY() + normal.GetY() * (overlap->m_Size.GetY() / 2 + collider->m_Size.GetY() / 2 + tolerance));
+                }
+
+                if (newPos.GetX() != 0.0f || newPos.GetY() != 0.0f)
+                {
+                    SetGlobalPosition(newPos - collider->m_Size / 2);
+                }
+            }
+            // If we have a collision 
             return true;
         }
     }
 
     return false;
-
-
-    // RaycastHitResult result = Raycast::RayCastRay(m_Colliders[0], GetGlobalPosition(), targetPos);
-    
-    // if (result.hit)
-    // {
-    //     HFMath::Vector2 tolerance = HFMath::Vector2(0.5f, 0.5f);
-    //     HFMath::Vector2 offset = HFMath::Vector2(
-    //         result.position.directionTo(GetGlobalPosition()) * tolerance
-    //     );
-
-    //     SetGlobalPosition(result.position + offset);
-    //     std::cout << "Target is: " << targetPos << std::endl;
-    //     std::cout << "Moved to: " << result.position + offset << std::endl;
-    // }
-    // else
-    // {
-    //     SetGlobalPosition(targetPos);
-    // }
-
-    // bool hit = false;
-
-    // for (CollisionComponent* collider : m_Colliders)
-    // {
-    //     std::vector<CollisionComponent*> overlaps = collider->GetOverlappingComponents();
-
-    //     for (CollisionComponent* overlap : overlaps)
-    //     {
-    //         // Will only run if the overlaps list isn't empy, meaning we're colliding
-
-    //         HFMath::Vector2 pos = collider->m_Transform.GetGlobalPosition();
-    //         HFMath::Vector2 otherPos = overlap->m_Transform.GetGlobalPosition();
-
-    //         HFMath::Vector2 tolerance = HFMath::Vector2(0.0005f, 0.0005f);
-
-
-
-    //         // CollidingSides collidingSides = collider->GetCollidingSides(overlap);
-
-    //         // if (collidingSides.SIDE_RIGHT)
-    //         // {
-    //         //     HFMath::Vector2 offset = HFMath::Vector2(
-    //         //         -tolerance.GetX() - collider->m_Size.GetX(),
-    //         //         pos.GetY() - otherPos.GetY()
-    //         //     );
-    //         //     SetGlobalPosition(otherPos + offset);
-    //         //     hit = true;
-    //         // }
-    //         // else if (collidingSides.SIDE_TOP)
-    //         // {
-    //         //     HFMath::Vector2 offset = HFMath::Vector2(
-    //         //         pos.GetX() - otherPos.GetX(),
-    //         //         tolerance.GetY() + overlap->m_Size.GetY()
-    //         //     );
-    //         //     SetGlobalPosition(otherPos + offset);
-    //         //     hit = true;
-    //         // }
-    //     }
-    // }
-
-    // if (!hit) { SetGlobalPosition(targetPos); }
 }
 
 

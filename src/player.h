@@ -49,4 +49,6 @@ class Player : public WorldComponent
 
         HFMath::Vector2 velocity;
         void Move(double deltaTime);
+        void PlatformerMove(double deltaTime);
+        void DirectionalMove(double deltaTime);
 };

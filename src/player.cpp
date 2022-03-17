@@ -38,6 +38,21 @@ void Player::Update(double deltaTime)
 
 void Player::Move(double deltaTime)
 {
+    
+    // DirectionalMove(deltaTime);
+    PlatformerMove(deltaTime);
+
+    // std::cout << "Direction: " << m_Transform.GetGlobalPosition().directionTo(m_Transform.GetGlobalPosition() + velocity) << std::endl;
+    // std::cout << "Direction: " << velocity << std::endl;
+    
+    // std::cout << m_Collider.GetOverlappingComponents().size() << std::endl;
+
+    // std::cout << "velocity: " << velocity << std::endl;
+    // std::cout << "position: " << m_Transform.GetGlobalPosition() << std::endl;
+}
+
+void Player::DirectionalMove(double deltaTime)
+{
     float dirX = 0.0f;
     float dirY = 0.0f;
 
@@ -49,11 +64,52 @@ void Player::Move(double deltaTime)
     {
         dirX -= 1.0f;
     }
+    if(IsKeyDown(KEY_W))
+    {
+        dirY -= 1.0f;
+    }
+    if(IsKeyDown(KEY_S))
+    {
+        dirY += 1.0f;
+    }
+
+    HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
+    dirVec = dirVec.Normalized();
+    
+    velocity = dirVec * speed * deltaTime;
+
+    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
+    m_Transform.MoveAndCollide(xOffset);
+    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY());
+    m_Transform.MoveAndCollide(yOffset);
+}
+
+void Player::PlatformerMove(double deltaTime)
+{
+    float dirX = 0.0f;
+    float dirY = 0.0f;
+
+    if (IsKeyDown(KEY_D))
+    {
+        dirX += 1.0f;
+    }
+    if (IsKeyDown(KEY_A))
+    {
+        dirX -= 1.0f;
+    }
+    
 
     HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
     dirVec = dirVec.Normalized();
     
     velocity.SetX(dirVec.GetX() * speed * deltaTime);
+
+    velocity.SetY(velocity.GetY() + GRAVITY * deltaTime);
+
+    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
+    m_Transform.MoveAndCollide(xOffset);
+    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
+    isOnFloor = m_Transform.MoveAndCollide(yOffset);
 
     if (isOnFloor)
     {
@@ -64,19 +120,4 @@ void Player::Move(double deltaTime)
             velocity.SetY(-jumpForce);
         }
     }
-
-    velocity.SetY(velocity.GetY() + GRAVITY * deltaTime);
-
-    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
-    m_Transform.MoveAndCollide(xOffset);
-    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
-    isOnFloor = m_Transform.MoveAndCollide(yOffset);
-
-    // std::cout << "Direction: " << m_Transform.GetGlobalPosition().directionTo(m_Transform.GetGlobalPosition() + velocity) << std::endl;
-    // std::cout << "Direction: " << velocity << std::endl;
-    
-    // std::cout << m_Collider.GetOverlappingComponents().size() << std::endl;
-
-    // std::cout << "velocity: " << velocity << std::endl;
-    // std::cout << "position: " << m_Transform.GetGlobalPosition() << std::endl;
 }
