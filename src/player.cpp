@@ -2,6 +2,7 @@
 #include "game.h"
 #include <iostream>
 #include "hflog.h"
+#include <math.h>
 
 void Player::Init()
 {
@@ -61,6 +62,68 @@ void Player::Move(double deltaTime)
     // std::cout << "position: " << m_Transform.GetGlobalPosition() << std::endl;
 }
 
+void Player::PlatformerMove(double deltaTime)
+{
+    float dirX = 0.0f;
+    float dirY = 0.0f;
+
+    if (IsKeyDown(KEY_D))
+    {
+        dirX += 1.0f;
+    }
+    if (IsKeyDown(KEY_A))
+    {
+        dirX -= 1.0f;
+    }
+    
+
+    HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
+    dirVec = dirVec.Normalized();
+    
+    // velocity.SetX(dirVec.GetX() * m_MaxSpeed * deltaTime);
+    if (!dirX || abs(velocity.GetX()) > m_MaxSpeed)
+    {
+        // velocity.SetX(velocity.GetX() - m_Acceleration * deltaTime);
+        velocity.SetX(HFMath::lerp(velocity.GetX(), 0.0f, m_Deceleration * deltaTime));
+    }
+    else if (dirX)
+    {
+        // velocity.SetX(velocity.GetX() + dirX * m_Acceleration * deltaTime);
+        velocity.SetX(HFMath::lerp(velocity.GetX(), dirX * m_MaxSpeed, m_Acceleration * deltaTime));
+    }
+
+    // if (velocity.GetX() > m_MaxSpeed)
+    // {
+    //     velocity.SetX(m_MaxSpeed);
+    // }
+    // else if (velocity.GetX() < -m_MaxSpeed)
+    // {
+    //     velocity.SetX(-m_MaxSpeed);
+    // }
+ 
+    velocity.SetY(velocity.GetY() + m_GRAVITY * deltaTime);
+
+    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX() * deltaTime, 0.0f);
+    m_Transform.MoveAndCollide(xOffset);
+    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
+    isOnFloor = m_Transform.MoveAndCollide(yOffset);
+
+    if (isOnFloor)
+    {
+        velocity.SetY(0.0f);
+
+        if(IsKeyPressed(KEY_SPACE))
+        {
+            velocity.SetY(-m_JumpForce);
+        }
+    }
+
+    if (IsKeyPressed(KEY_LEFT_SHIFT))
+    {
+        velocity.SetX(dirX * m_DashForce);
+    }
+}
+
 void Player::DirectionalMove(double deltaTime)
 {
     float dirX = 0.0f;
@@ -86,48 +149,10 @@ void Player::DirectionalMove(double deltaTime)
     HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
     dirVec = dirVec.Normalized();
     
-    velocity = dirVec * speed * deltaTime;
+    velocity = dirVec * m_MaxSpeed * deltaTime;
 
     HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
     m_Transform.MoveAndCollide(xOffset);
     HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY());
     m_Transform.MoveAndCollide(yOffset);
-}
-
-void Player::PlatformerMove(double deltaTime)
-{
-    float dirX = 0.0f;
-    float dirY = 0.0f;
-
-    if (IsKeyDown(KEY_D))
-    {
-        dirX += 1.0f;
-    }
-    if (IsKeyDown(KEY_A))
-    {
-        dirX -= 1.0f;
-    }
-    
-
-    HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
-    dirVec = dirVec.Normalized();
-    
-    velocity.SetX(dirVec.GetX() * speed * deltaTime);
-
-    velocity.SetY(velocity.GetY() + GRAVITY * deltaTime);
-
-    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
-    m_Transform.MoveAndCollide(xOffset);
-    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
-    isOnFloor = m_Transform.MoveAndCollide(yOffset);
-
-    if (isOnFloor)
-    {
-        velocity.SetY(0.0f);
-
-        if(IsKeyPressed(KEY_SPACE))
-        {
-            velocity.SetY(-jumpForce);
-        }
-    }
 }

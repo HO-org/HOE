@@ -12,6 +12,11 @@ namespace HFMath
         return sqrt(pow(a, 2) + pow(b, 2));
     }
 
+    inline float lerp(float from, float to, float delta)
+    {
+        return (from * (1.0f - delta)) + (to * delta);
+    }
+
     class Vector2
     {
     public:
