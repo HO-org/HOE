@@ -18,7 +18,7 @@ void Player::Ready()
 {
     // m_Texture = LoadTexture("../resources/player.png");
     // HFLog::Log("Tried loading sprite");
-    m_Sprite.Load("../resources/player.png");
+    m_Sprite.Load("resources/player.png");
     HFMath::Vector2 startPos;
     // startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);
     // startPos.SetY((float)Game::GetInstance().getScreenHeight() / 2);

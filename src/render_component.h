@@ -10,7 +10,7 @@ class RenderComponent : public WorldComponent
         virtual void Update(double deltaTime) {}
         virtual void Ready() {}
 
-        virtual void Draw();
+        virtual void Draw() {}
 
         virtual ~RenderComponent() {}
 };
