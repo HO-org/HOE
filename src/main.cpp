@@ -37,6 +37,7 @@ int main(void)
     g_Game.initalize(800, 600);
 
     InitWindow(g_Game.getScreenWidth(), g_Game.getScreenHeight(), "Raylib Game!");
+    SetTargetFPS(400);
     // SetTargetFPS(20);
 
     AddComponentsToGame();
