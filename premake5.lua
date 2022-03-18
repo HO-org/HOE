@@ -7,6 +7,7 @@ project "HOEngine"
     targetdir "build/%{cfg.buildcfg}"
 
     includedirs { "include" }
+    includedirs { "src/**" }
     
     libdirs { "lib", "../lib" }
 
