@@ -37,6 +37,7 @@ public:
     void InitComponents() { for (Component* component : m_Components) { component->Init(); } }
     void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
     void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
+    void PhysicsUpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->PhysicsUpdate(deltaTime); } }
     void DrawComponents(SDL_Renderer** renderer) { for (RenderComponent* component : m_RenderComponents) { component->Draw(renderer); } }
 
     SDL_Renderer** m_CurRenderer = NULL;

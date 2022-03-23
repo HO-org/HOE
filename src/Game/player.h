@@ -26,6 +26,7 @@ class Player : public WorldComponent
 
         virtual void Init();
         virtual void Update(double deltaTime) override;
+        virtual void PhysicsUpdate(double deltaTime) override;
         virtual void Ready() override;
 
         virtual ~Player() {}
@@ -44,11 +45,11 @@ class Player : public WorldComponent
         bool isOnFloor = false;
 
         float m_MaxSpeed = 230.0f;
-        float m_Acceleration = 7.5f;
-        float m_Deceleration = 10.0f;
-        float m_JumpForce = 400.0f;
-        float m_GRAVITY = 1000.0f;
-        float m_DashForce = 1000.0f;
+        float m_Acceleration = 10.0f;
+        float m_Deceleration = 12.5f;
+        float m_JumpForce = 620.0f;
+        float m_GRAVITY = 2400.0f;
+        float m_DashForce = 1200.0f;
 
         // float m_MaxSpeed = 2.0f;
         // float m_Acceleration = 0.5f;

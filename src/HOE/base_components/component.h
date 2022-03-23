@@ -9,6 +9,7 @@ class Component
 
         virtual void Init() {}
         virtual void Update(double deltaTime) {}
+        virtual void PhysicsUpdate(double deltaTime) {}
         virtual void Ready() {}
 
         virtual ~Component() {}

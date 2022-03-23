@@ -12,8 +12,9 @@
 
 const float g_FPS_UPDATE_INTERVAL = 0.1f;
 float g_TimeSinceUpdatedFPS = 0.0f;
-
 float g_FPS = 0.0f;
+
+const double g_PHYSICS_UPDATE_TICK = 1.0 / 144.0;
 
 Player g_Player = Player();
 
@@ -72,6 +73,7 @@ int main(int argv, char** args)
     Uint64 curTime = SDL_GetPerformanceCounter();
     Uint64 lastTime = 0;
     double deltaTime = 0;
+    double accumulator = 0;
 
     bool gameLoop = true;
     // Game Loop
@@ -80,21 +82,31 @@ int main(int argv, char** args)
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
 
-        deltaTime = (double)((curTime - lastTime)*1000 / (double)SDL_GetPerformanceFrequency() ) * 0.001;
 
-        HFInput& inputSystem = HFInput::GetInstance();
+        deltaTime = ((curTime - lastTime) / (double)SDL_GetPerformanceFrequency() );
+        if (deltaTime >= 0.25) { deltaTime = 0.25f; }
+        accumulator += deltaTime;
 
-        inputSystem.UpdateDownKeys();
-        if (inputSystem.m_Quit)
+        while (accumulator >= g_PHYSICS_UPDATE_TICK)
         {
-            gameLoop = false;
+            HFInput& inputSystem = HFInput::GetInstance();
+
+            inputSystem.UpdateDownKeys();
+            if (inputSystem.m_Quit)
+            {
+                gameLoop = false;
+            }
+
+            g_Game.PhysicsUpdateComponents(g_PHYSICS_UPDATE_TICK);
+            accumulator -= g_PHYSICS_UPDATE_TICK;
         }
+
 
         Update(deltaTime);
 
         DrawGame(&renderer);
 
-        SDL_Delay(1);
+        // SDL_Delay(2);
     }
 
     return 0;
