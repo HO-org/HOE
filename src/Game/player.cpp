@@ -2,6 +2,7 @@
 #include "game.h"
 #include <iostream>
 #include "hflog.h"
+#include "hf_input.h"
 #include <math.h>
 
 void Player::Init()
@@ -18,14 +19,15 @@ void Player::Ready()
 {
     // m_Texture = LoadTexture("../resources/player.png");
     // HFLog::Log("Tried loading sprite");
-    m_Sprite.Load("resources/player.png");
-    HFMath::Vector2 startPos;
+    // m_Sprite.Load("resources/player.png");
     // startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);
     // startPos.SetY((float)Game::GetInstance().getScreenHeight() / 2);
+    HFMath::Vector2 startPos;
     startPos.SetX(400);
     startPos.SetY(300);
     m_Transform.SetGlobalPosition(startPos);
 
+    m_Sprite.load(Game::GetInstance().m_CurRenderer, "resources/player.png");
     m_Transform.AddChild(&m_Sprite.m_Transform);
 
     m_Collider.m_Transform.SetGlobalPosition(HFMath::Vector2(0.0f, 0.0f));
@@ -67,11 +69,13 @@ void Player::PlatformerMove(double deltaTime)
     float dirX = 0.0f;
     float dirY = 0.0f;
 
-    if (IsKeyDown(KEY_D))
+    HFInput& inputSystem = HFInput::GetInstance();
+
+    if (inputSystem.IsKeyDown(SDLK_d))
     {
         dirX += 1.0f;
     }
-    if (IsKeyDown(KEY_A))
+    if (inputSystem.IsKeyDown(SDLK_a))
     {
         dirX -= 1.0f;
     }
@@ -107,18 +111,21 @@ void Player::PlatformerMove(double deltaTime)
     m_Transform.MoveAndCollide(xOffset);
     HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
     isOnFloor = m_Transform.MoveAndCollide(yOffset);
+    // m_Transform.SetGlobalPosition( m_Transform.GetGlobalPosition() + HFMath::Vector2(xOffset.GetX(), yOffset.GetY()) );
+    // m_Transform.SetGlobalPosition( m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, 1.0f) );
+    // std::cout << m_Transform.GetGlobalPosition() << "\n";
 
     if (isOnFloor)
     {
         velocity.SetY(0.0f);
 
-        if(IsKeyPressed(KEY_SPACE))
+        if(inputSystem.IsKeyJustDown(SDLK_SPACE))
         {
             velocity.SetY(-m_JumpForce);
         }
     }
 
-    if (IsKeyPressed(KEY_LEFT_SHIFT))
+    if (inputSystem.IsKeyJustDown(SDLK_LSHIFT))
     {
         velocity.SetX(dirX * m_DashForce);
     }
@@ -129,19 +136,21 @@ void Player::DirectionalMove(double deltaTime)
     float dirX = 0.0f;
     float dirY = 0.0f;
 
-    if (IsKeyDown(KEY_D))
+    HFInput& inputSystem = HFInput::GetInstance();
+
+    if (inputSystem.IsKeyDown(SDLK_d))
     {
         dirX += 1.0f;
     }
-    if (IsKeyDown(KEY_A))
+    if (inputSystem.IsKeyDown(SDLK_a))
     {
         dirX -= 1.0f;
     }
-    if(IsKeyDown(KEY_W))
+    if(inputSystem.IsKeyDown(SDLK_w))
     {
         dirY -= 1.0f;
     }
-    if(IsKeyDown(KEY_S))
+    if(inputSystem.IsKeyDown(SDLK_s))
     {
         dirY += 1.0f;
     }

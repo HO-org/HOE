@@ -1,5 +1,6 @@
 #pragma once
 #include "world_component.h"
+#include "SDL.h"
 
 
 class RenderComponent : public WorldComponent
@@ -10,7 +11,7 @@ class RenderComponent : public WorldComponent
         virtual void Update(double deltaTime) {}
         virtual void Ready() {}
 
-        virtual void Draw() {}
+        virtual void Draw(SDL_Renderer** renderer) {}
 
         virtual ~RenderComponent() {}
 };

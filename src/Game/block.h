@@ -1,7 +1,8 @@
 #pragma once
 #include "render_component.h"
 #include "collision_component.h"
-#include "raylib.h"
+#include "misc.h"
+#include "SDL.h"
 
 class Block : public RenderComponent
 {
@@ -18,14 +19,17 @@ class Block : public RenderComponent
             m_Collision.m_Size = size;
         }
 
-        CollisionComponent m_Collision = CollisionComponent();
+        virtual ~Block() {}
         
-    private:
-        virtual void Init();
-        virtual void Ready() override;
-        virtual void Draw() override;
+        CollisionComponent m_Collision = CollisionComponent();
 
-        Color m_Color = RED;
+    private:
+        virtual void Init() override;
+        virtual void Ready() override;
+        virtual void Draw(SDL_Renderer** renderer) override;
+        virtual void Update() {}
+
+        HFColor m_Color = { 255, 0, 0, 255 };
 
         HFTransform m_Transform;
         HFMath::Vector2 m_Size = HFMath::Vector2::ZERO();

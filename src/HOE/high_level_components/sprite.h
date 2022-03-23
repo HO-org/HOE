@@ -1,31 +1,23 @@
-#pragma once
+#include "SDL.h"
 #include "render_component.h"
-#include "raylib.h"
-#include "hfmath.h"
-#include "hftransform.h"
-
-class RenderComponent;
 
 class Sprite : public RenderComponent
 {
-    public:
-        Sprite() {}
-        Sprite(const char* defaultPath) { m_DefaultPath = defaultPath; }
+public:
+    Sprite();
+    ~Sprite();
 
-        virtual void Draw() override;
-        virtual void Update(double deltaTime);
-        virtual void Ready() override;
+    bool load(SDL_Renderer** renderer, std::string path);
 
-        void Load(const char* path);
+    void freeResources();
 
-        virtual ~Sprite() {}
+    void Draw(SDL_Renderer** renderer) override;
 
-        Texture2D GetTexture() { return m_Texture; }
+    int getWidth();
+    int getHeight();
 
-        const char* m_DefaultPath;
-        // HFMath::Vector2 m_Position = HFMath::Vector2::ZERO();
+    SDL_Texture* m_Texture;
 
-    private:
-        Texture2D m_Texture;
-        bool initialized = false;
+private:
+    int m_Width, m_Height;
 };

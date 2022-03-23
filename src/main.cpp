@@ -1,9 +1,12 @@
-#include "raylib.h"
+#include "SDL.h"
+#include "SDL_image.h"
+// #include "raylib.h"
 #include "player.h"
 #include "game.h"
 #include "enums.h"
 #include "raycast.h"
 #include "block.h"
+#include "hf_input.h"
 #include <iostream>
 #include <string>
 
@@ -14,10 +17,12 @@ float g_FPS = 0.0f;
 
 Player g_Player = Player();
 
+Sprite g_Sprite;
+
 Game& g_Game = Game::GetInstance();
 
-CollisionComponent g_SquareCollision = CollisionComponent();
-CollisionComponent g_SquareCollision2 = CollisionComponent();
+// CollisionComponent g_SquareCollision = CollisionComponent();
+// CollisionComponent g_SquareCollision2 = CollisionComponent();
 
 const int NUM_BLOCKS = 3;
 Block g_LevelBlocks[NUM_BLOCKS] = {
@@ -30,38 +35,139 @@ Block g_LevelBlocks[NUM_BLOCKS] = {
 
 void AddComponentsToGame();
 void Update(double deltaTime);
-void Draw(double deltaTime);
+void DrawGame(SDL_Renderer** renderer);
+bool init(SDL_Window** window, SDL_Renderer** renderer);
+void quit(SDL_Renderer** renderer, SDL_Window** window);
+bool loadResources(SDL_Renderer** renderer);
 
-int main(void)
+void RaylibDraw();
+void RaylibLoop();
+
+int main(int argv, char** args)
 {
     g_Game.initalize(800, 600);
 
-    InitWindow(g_Game.getScreenWidth(), g_Game.getScreenHeight(), "Raylib Game!");
-    SetTargetFPS(400);
-    // SetTargetFPS(20);
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+
+    if (!init(&window, &renderer))
+    {
+        quit(&renderer, &window);
+        return 0;
+    }
+
+    if (!loadResources(&renderer))
+    {
+        quit(&renderer, &window);
+        return 0;
+    }
+
+    g_Game.m_CurRenderer = &renderer;
 
     AddComponentsToGame();
     g_Game.InitComponents();
 
     g_Game.ReadyComponents();
 
-    // g_raycast.m_Transform.SetGlobalPosition(HFMath::Vector2(0.0f, 0.0f));
-    // g_raycast.m_Direction = HFMath::Vector2(1.0f, 0.0f);
+    Uint64 curTime = SDL_GetPerformanceCounter();
+    Uint64 lastTime = 0;
+    double deltaTime = 0;
 
-    double lastTime = GetTime();
-
+    bool gameLoop = true;
     // Game Loop
-    while (!WindowShouldClose())
+    while (gameLoop)
     {
-        double curTime = GetTime();
-        double deltaTime = (curTime - lastTime);
+        lastTime = curTime;
+        curTime = SDL_GetPerformanceCounter();
+
+        deltaTime = (double)((curTime - lastTime)*1000 / (double)SDL_GetPerformanceFrequency() ) * 0.001;
+
+        HFInput& inputSystem = HFInput::GetInstance();
+
+        inputSystem.UpdateDownKeys();
+        if (inputSystem.m_Quit)
+        {
+            gameLoop = false;
+        }
 
         Update(deltaTime);
 
-        Draw(deltaTime);
-        
-        lastTime = curTime;
+        DrawGame(&renderer);
+
+        SDL_Delay(1);
     }
+
+    return 0;
+}
+
+bool init(SDL_Window** window, SDL_Renderer** renderer)
+{
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf( "Could not init SDL_VIDEO! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+    
+    if (SDL_Init(SDL_INIT_TIMER) < 0)
+    {
+        printf( "Could not init SDL_TIMER! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+
+    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
+    {
+        printf( "Warning: Linear texture filtering not enabled!" );
+    }
+
+    *window = SDL_CreateWindow("HOEngine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                              g_Game.getScreenWidth(), g_Game.getScreenHeight(), SDL_WINDOW_SHOWN);
+    if (*window == NULL)
+    {
+        printf("Could not create SDL Window! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+
+    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
+    if (*renderer == NULL)
+    {
+        printf("Could not create renderer! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+
+    SDL_SetRenderDrawColor(*renderer, 255, 255, 255, 255);
+
+    int imgFlags = IMG_INIT_PNG;
+    if( !( IMG_Init( imgFlags ) & imgFlags ) )
+    {
+        printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+        return false;
+    }
+
+    return true;
+}
+
+
+void quit(SDL_Renderer** renderer, SDL_Window** window)
+{
+    SDL_DestroyRenderer(*renderer);
+    SDL_DestroyWindow(*window);
+    *window = NULL;
+    *renderer = NULL;
+
+    IMG_Quit();
+    SDL_Quit();
+}
+
+
+bool loadResources(SDL_Renderer** renderer)
+{
+	if (!g_Sprite.load(renderer, "resources/player.png"))
+    {
+        printf("Failed to load texture!\n");
+        return false;
+    }
+
+	return true;
 }
 
 
@@ -118,54 +224,107 @@ void Update(double deltaTime)
 }
 
 
-void Draw(double deltaTime)
+void DrawGame(SDL_Renderer** renderer)
 {
-    BeginDrawing();
+    SDL_SetRenderDrawColor(*renderer, 255, 255, 255, 255);
+    SDL_RenderClear(*renderer);
 
-    ClearBackground(WHITE);
+    // int centerX = g_Game.getScreenWidth() / 2 - g_Sprite.getWidth();
+    // int centerY = g_Game.getScreenHeight() / 2 - g_Sprite.getHeight();
+    // g_Sprite.draw(*renderer, centerX, centerY);
+    // int posX = (int)(spritePos.GetX());
+    // int posY = (int)(spritePos.GetY());
+    // std::cout << posX << ", " << posY << "\n";
+    // g_Sprite.draw(*renderer);
 
-    g_Game.DrawComponents();
+    // g_Player.m_Sprite.Draw(renderer);
+    g_Game.DrawComponents(renderer);
+    // std::cout << g_Player.m_Sprite.m_Transform.GetGlobalPosition() << "\n";
 
-    DrawText(TextFormat("FPS: %s", std::to_string((int)g_FPS).c_str()), 50, 50, 24, BLACK);
-
-    EndDrawing();
-
-    // DrawCircle(g_raycast.m_Transform.GetGlobalPosition().GetX(), g_raycast.m_Transform.GetGlobalPosition().GetY(), 10.0f, GREEN);
-    // int rectWidth = 35;
-    // int rectLength = 500;
-    // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
-    // DrawRectangle(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
-    // DrawRectangle(((int)g_Game.getScreenWidth() / 2 - 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
-    
-    // HFMath::Vector2 wall1 = HFMath::Vector2(100.0f, 50.0f);
-    // HFMath::Vector2 wall2 = HFMath::Vector2(100.0f, -50.0f);
-    // HFMath::Vector2 wall1 = HFMath::Vector2(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2));
-    // HFMath::Vector2 wall2 = HFMath::Vector2(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2) + 200);
-
-    // g_raycast.m_Transform.SetGlobalPosition(HFMath::Vector2(100.0f, 100.0f));
-
-    // HFMath::Vector2 mousePos = HFMath::Vector2(GetMousePosition().x, GetMousePosition().y);
-
-    // g_raycast.LookAt(mousePos);
-
-    // IntersectResult result = g_raycast.IntersectRay(wall1, wall2);
-
-    // if (result.hit)
-    // {
-    //     DrawCircle(result.position.GetX(), result.position.GetY(), 30.0f, BLACK);
-    //     // std::cout << "Mouse Pos: " << mousePos << std::endl;
-    //     // std::cout << "Result Pos: " << result.position << std::endl;
-    //     std::cout << (int)result.position.GetY() - mousePos.GetY() << std::endl;
-    // }
-    
-    // DrawLine(wall1.GetX(), wall1.GetY(), wall2.GetX(), wall2.GetY(), ORANGE);
-
-    // RaycastHitResult result = g_raycast.CollideRay(&g_Player.m_Collider, mousePos);
-    // // std::cout << mousePos << std::endl;
-    // if (result.hit)
-    // {
-    //     DrawCircle(result.position.GetX(), result.position.GetY(), 15.0f, BLACK);
-    //     // std::cout << result.position << std::endl;
-    // }
-
+    SDL_RenderPresent(*renderer);
 }
+
+
+// void RaylibLoop()
+// {
+//     g_Game.initalize(800, 600);
+
+//     InitWindow(g_Game.getScreenWidth(), g_Game.getScreenHeight(), "Raylib Game!");
+//     SetTargetFPS(400);
+//     // SetTargetFPS(20);
+
+//     AddComponentsToGame();
+//     g_Game.InitComponents();
+
+//     g_Game.ReadyComponents();
+
+//     // g_raycast.m_Transform.SetGlobalPosition(HFMath::Vector2(0.0f, 0.0f));
+//     // g_raycast.m_Direction = HFMath::Vector2(1.0f, 0.0f);
+
+//     double lastTime = GetTime();
+
+//     // Game Loop
+//     while (!WindowShouldClose())
+//     {
+//         double curTime = GetTime();
+//         double deltaTime = (curTime - lastTime);
+
+//         Update(deltaTime);
+
+//         RaylibDraw();
+        
+//         lastTime = curTime;
+//     }
+// }
+
+// void RaylibDraw(double deltaTime)
+// {
+//     BeginDrawing();
+
+//     ClearBackground(WHITE);
+
+//     g_Game.DrawComponents();
+
+//     DrawText(TextFormat("FPS: %s", std::to_string((int)g_FPS).c_str()), 50, 50, 24, BLACK);
+
+//     EndDrawing();
+
+//     // DrawCircle(g_raycast.m_Transform.GetGlobalPosition().GetX(), g_raycast.m_Transform.GetGlobalPosition().GetY(), 10.0f, GREEN);
+//     // int rectWidth = 35;
+//     // int rectLength = 500;
+//     // DrawRectangle(((int)g_Game.getScreenWidth() / 2) + 200, ((int)g_Game.getScreenHeight() / 2) - (rectLength / 2), rectWidth, rectLength, RED);
+//     // DrawRectangle(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
+//     // DrawRectangle(((int)g_Game.getScreenWidth() / 2 - 200), ((int)g_Game.getScreenHeight() / 2), 20, 20, RED);
+    
+//     // HFMath::Vector2 wall1 = HFMath::Vector2(100.0f, 50.0f);
+//     // HFMath::Vector2 wall2 = HFMath::Vector2(100.0f, -50.0f);
+//     // HFMath::Vector2 wall1 = HFMath::Vector2(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2));
+//     // HFMath::Vector2 wall2 = HFMath::Vector2(((int)g_Game.getScreenWidth() / 2 + 200), ((int)g_Game.getScreenHeight() / 2) + 200);
+
+//     // g_raycast.m_Transform.SetGlobalPosition(HFMath::Vector2(100.0f, 100.0f));
+
+//     // HFMath::Vector2 mousePos = HFMath::Vector2(GetMousePosition().x, GetMousePosition().y);
+
+//     // g_raycast.LookAt(mousePos);
+
+//     // IntersectResult result = g_raycast.IntersectRay(wall1, wall2);
+
+//     // if (result.hit)
+//     // {
+//     //     DrawCircle(result.position.GetX(), result.position.GetY(), 30.0f, BLACK);
+//     //     // std::cout << "Mouse Pos: " << mousePos << std::endl;
+//     //     // std::cout << "Result Pos: " << result.position << std::endl;
+//     //     std::cout << (int)result.position.GetY() - mousePos.GetY() << std::endl;
+//     // }
+    
+//     // DrawLine(wall1.GetX(), wall1.GetY(), wall2.GetX(), wall2.GetY(), ORANGE);
+
+//     // RaycastHitResult result = g_raycast.CollideRay(&g_Player.m_Collider, mousePos);
+//     // // std::cout << mousePos << std::endl;
+//     // if (result.hit)
+//     // {
+//     //     DrawCircle(result.position.GetX(), result.position.GetY(), 15.0f, BLACK);
+//     //     // std::cout << result.position << std::endl;
+//     // }
+
+// }
