@@ -3,6 +3,7 @@
 #include "render_component.h"
 #include "collision_component.h"
 #include "SDL.h"
+#include "camera.h"
 #include <vector>
 
 // Singleton class
@@ -38,9 +39,11 @@ public:
     void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
     void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
     void PhysicsUpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->PhysicsUpdate(deltaTime); } }
-    void DrawComponents(SDL_Renderer** renderer) { for (RenderComponent* component : m_RenderComponents) { component->Draw(renderer); } }
+    void DrawComponents(SDL_Renderer** renderer) { for (RenderComponent* component : m_RenderComponents) { component->Draw(renderer, m_MainCamera); } }
 
     SDL_Renderer** m_CurRenderer = NULL;
+
+    Camera* m_MainCamera;
 
 private:
     Game() {} ;

@@ -11,7 +11,7 @@ public:
 
     void freeResources();
 
-    void Draw(SDL_Renderer** renderer) override;
+    void Draw(SDL_Renderer** renderer, Camera* mainCamera) override;
 
     int getWidth();
     int getHeight();

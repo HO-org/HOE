@@ -52,6 +52,10 @@ void Player::Move(double deltaTime)
 
 void Player::PlatformerMove(double deltaTime)
 {
+    // m_Camera.m_Transform.SetGlobalPosition(m_Transform.GetGlobalPosition());
+    // m_Camera.SetCenter(m_Transform.GetGlobalPosition());
+    // Game::GetInstance().m_MainCamera = &m_Camera;
+
     float dirX = 0.0f;
     float dirY = 0.0f;
 

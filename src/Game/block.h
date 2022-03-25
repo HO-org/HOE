@@ -26,7 +26,7 @@ class Block : public RenderComponent
     private:
         virtual void Init() override;
         virtual void Ready() override;
-        virtual void Draw(SDL_Renderer** renderer) override;
+        virtual void Draw(SDL_Renderer** renderer, Camera* mainCamera) override;
         virtual void Update() {}
 
         HFColor m_Color = { 255, 0, 0, 255 };

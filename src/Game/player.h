@@ -42,6 +42,8 @@ class Player : public WorldComponent
         // HFMath::Vector2 m_Position;
 
         // Texture2D m_Texture;
+        Camera m_Camera;
+
         bool isOnFloor = false;
 
         HFMath::Vector2 m_Velocity;

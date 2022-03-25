@@ -1,5 +1,7 @@
 #include "sprite.h"
 #include "SDL_image.h"
+#include "game.h"
+#include "hfmath.h"
 
 Sprite::Sprite()
 {
@@ -62,9 +64,13 @@ void Sprite::freeResources()
     m_Height = 0;
 }
 
-void Sprite::Draw(SDL_Renderer** renderer)
+void Sprite::Draw(SDL_Renderer** renderer, Camera* mainCamera)
 {
     HFMath::Vector2 pos = m_Transform.GetGlobalPosition();
+    if (mainCamera != NULL)
+    {
+        pos = pos - mainCamera->m_Transform.GetGlobalPosition();
+    }
     SDL_Rect renderRect = { (int)pos.GetX(), (int)pos.GetY(), m_Width, m_Height };
     SDL_RenderCopy(*renderer, m_Texture, NULL, &renderRect);
 }
