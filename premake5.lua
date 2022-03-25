@@ -11,7 +11,7 @@ project "HOEngine"
     
     libdirs { "lib", "../lib", "vendor/SDL2-2.0.20/x86_64-w64-mingw32/lib", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/lib" }
 
-    links { "raylib", "opengl32", "gdi32", "winmm" , "mingw32", "SDL2main", "SDL2", "SDL2_image" }
+    links { "mingw32", "SDL2main", "SDL2", "SDL2_image" }
     
     files { "**.h", "**.cpp" }
 
