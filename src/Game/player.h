@@ -44,12 +44,17 @@ class Player : public WorldComponent
         // Texture2D m_Texture;
         bool isOnFloor = false;
 
+        HFMath::Vector2 m_Velocity;
+
         float m_MaxSpeed = 230.0f;
         float m_Acceleration = 10.0f;
         float m_Deceleration = 12.5f;
-        float m_JumpForce = 620.0f;
-        float m_GRAVITY = 2400.0f;
+        float m_JumpForce = 590.0f;
+        float m_GRAVITY = 1800.0f;
         float m_DashForce = 1200.0f;
+        float m_FallMultiplier = 1.25f;
+
+        bool m_HasDoubleJump = false;
 
         // float m_MaxSpeed = 2.0f;
         // float m_Acceleration = 0.5f;
@@ -58,8 +63,8 @@ class Player : public WorldComponent
         // float m_GRAVITY = 10.0f;
         // float m_DashForce = 10.0f;
 
-        HFMath::Vector2 velocity;
         void Move(double deltaTime);
         void PlatformerMove(double deltaTime);
         void DirectionalMove(double deltaTime);
+        void Jump();
 };

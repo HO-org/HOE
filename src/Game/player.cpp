@@ -13,19 +13,6 @@ void Player::Init()
     game.AddComponentCallback(&m_Sprite, READYUPDATE);
     game.AddRenderComponent(&m_Sprite);
     game.AddCollisionComponent(&m_Collider);
-}
-
-void Player::Ready()
-{
-    // m_Texture = LoadTexture("../resources/player.png");
-    // HFLog::Log("Tried loading sprite");
-    // m_Sprite.Load("resources/player.png");
-    // startPos.SetX((float)Game::GetInstance().getScreenWidth() / 2);
-    // startPos.SetY((float)Game::GetInstance().getScreenHeight() / 2);
-    HFMath::Vector2 startPos;
-    startPos.SetX(400);
-    startPos.SetY(300);
-    m_Transform.SetGlobalPosition(startPos);
 
     m_Sprite.load(Game::GetInstance().m_CurRenderer, "resources/player.png");
     m_Transform.AddChild(&m_Sprite.m_Transform);
@@ -36,38 +23,32 @@ void Player::Ready()
     m_Transform.AddChild(&m_Collider.m_Transform);
     m_Transform.AddCollider(&m_Collider);
 
-    // HFMath::Vector2 offset = HFMath::Vector2(50.0f, 50.0f);
-    // m_Sprite.m_Transform.SetLocalPosition(m_Sprite.m_Transform.GetGlobalPosition() + offset);
-    // std::cout << m_Sprite.m_Transform.GetParent()->GetLocalPosition() << std::endl;
-    // std::cout << (m_Sprite.m_Transform.GetParent() == NULL) << std::endl;
-    // std::cout << m_Sprite.m_Transform.GetLocalPosition() << std::endl;
+    HFMath::Vector2 startPos;
+    startPos.SetX(400);
+    startPos.SetY(300);
+    m_Transform.SetGlobalPosition(startPos);
+}
+
+void Player::Ready()
+{
+   
 }
 
 void Player::Update(double deltaTime)
 {
-    // Move(deltaTime);
+    Move(deltaTime);
 }
 
 void Player::PhysicsUpdate(double deltaTime)
 {
-    PlatformerMove(deltaTime);
+    // Move(deltaTime);
 }
 
 
 void Player::Move(double deltaTime)
 {
-    
     // DirectionalMove(deltaTime);
-    PlatformerMove(deltaTime);
-
-    // std::cout << "Direction: " << m_Transform.GetGlobalPosition().directionTo(m_Transform.GetGlobalPosition() + velocity) << std::endl;
-    // std::cout << "Direction: " << velocity << std::endl;
-    
-    // std::cout << m_Collider.GetOverlappingComponents().size() << std::endl;
-
-    // std::cout << "velocity: " << velocity << std::endl;
-    // std::cout << "position: " << m_Transform.GetGlobalPosition() << std::endl;
-}
+    PlatformerMove(deltaTime);}
 
 void Player::PlatformerMove(double deltaTime)
 {
@@ -89,52 +70,60 @@ void Player::PlatformerMove(double deltaTime)
     HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
     dirVec = dirVec.Normalized();
     
-    // velocity.SetX(dirVec.GetX() * m_MaxSpeed * deltaTime);
-    if (!dirX || abs(velocity.GetX()) > m_MaxSpeed)
+    if (!dirX || abs(m_Velocity.GetX()) > m_MaxSpeed)
     {
-        // velocity.SetX(velocity.GetX() - m_Acceleration * deltaTime);
-        velocity.SetX(HFMath::lerp(velocity.GetX(), 0.0f, m_Deceleration * deltaTime));
+        m_Velocity.SetX(HFMath::lerp(m_Velocity.GetX(), 0.0f, m_Deceleration * deltaTime));
     }
     else if (dirX)
     {
-        // velocity.SetX(velocity.GetX() + dirX * m_Acceleration * deltaTime);
-        velocity.SetX(HFMath::lerp(velocity.GetX(), dirX * m_MaxSpeed, m_Acceleration * deltaTime));
+        m_Velocity.SetX(HFMath::lerp(m_Velocity.GetX(), dirX * m_MaxSpeed, m_Acceleration * deltaTime));
     }
 
-    // if (velocity.GetX() > m_MaxSpeed)
-    // {
-    //     velocity.SetX(m_MaxSpeed);
-    // }
-    // else if (velocity.GetX() < -m_MaxSpeed)
-    // {
-    //     velocity.SetX(-m_MaxSpeed);
-    // }
+    float gravityMultiplier = 1.0f;
+    if (m_Velocity.GetY() > 0)
+    {
+        gravityMultiplier = m_FallMultiplier;
+    }
  
-    velocity.SetY(velocity.GetY() + m_GRAVITY * deltaTime);
+    m_Velocity.SetY(m_Velocity.GetY() + m_GRAVITY * gravityMultiplier * deltaTime);
 
-    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX() * deltaTime, 0.0f);
+    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(m_Velocity.GetX() * deltaTime, 0.0f);
     m_Transform.MoveAndCollide(xOffset);
-    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY() * deltaTime);
+    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, m_Velocity.GetY() * deltaTime);
     isOnFloor = m_Transform.MoveAndCollide(yOffset);
-    // m_Transform.SetGlobalPosition( m_Transform.GetGlobalPosition() + HFMath::Vector2(xOffset.GetX(), yOffset.GetY()) );
-    // m_Transform.SetGlobalPosition( m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, 1.0f) );
-    // std::cout << m_Transform.GetGlobalPosition() << "\n";
 
     if (isOnFloor)
     {
-        velocity.SetY(0.0f);
+        m_Velocity.SetY(0.0f);
+        m_HasDoubleJump = true;
+    }
 
-        if(inputSystem.IsKeyJustDown(SDLK_SPACE))
+    if(inputSystem.IsKeyJustDown(SDLK_SPACE))
+    {
+        if (isOnFloor)
         {
-            velocity.SetY(-m_JumpForce);
+            Jump();
+        }
+        else if (m_HasDoubleJump)
+        {
+            Jump();
+            m_HasDoubleJump = false;
         }
     }
 
     if (inputSystem.IsKeyJustDown(SDLK_LSHIFT))
     {
-        velocity.SetX(dirX * m_DashForce);
+        m_Velocity.SetX(dirX * m_DashForce);
+        m_Velocity.SetY(-25.0f);
     }
 }
+
+
+void Player::Jump()
+{
+    m_Velocity.SetY(-m_JumpForce);
+}
+
 
 void Player::DirectionalMove(double deltaTime)
 {
@@ -163,10 +152,10 @@ void Player::DirectionalMove(double deltaTime)
     HFMath::Vector2 dirVec = HFMath::Vector2(dirX, dirY);
     dirVec = dirVec.Normalized();
     
-    velocity = dirVec * m_MaxSpeed * deltaTime;
+    m_Velocity = dirVec * m_MaxSpeed * deltaTime;
 
-    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(velocity.GetX(), 0.0f);
+    HFMath::Vector2 xOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(m_Velocity.GetX(), 0.0f);
     m_Transform.MoveAndCollide(xOffset);
-    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, velocity.GetY());
+    HFMath::Vector2 yOffset = m_Transform.GetGlobalPosition() + HFMath::Vector2(0.0f, m_Velocity.GetY());
     m_Transform.MoveAndCollide(yOffset);
 }
