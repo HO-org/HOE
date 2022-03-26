@@ -23,6 +23,9 @@ class Block : public RenderComponent
         
         CollisionComponent m_Collision = CollisionComponent();
 
+        HFMath::Vector2 GetSize() { return m_Size; }
+        HFTransform m_Transform;
+
     private:
         virtual void Init() override;
         virtual void Ready() override;
@@ -31,6 +34,5 @@ class Block : public RenderComponent
 
         HFColor m_Color = { 255, 0, 0, 255 };
 
-        HFTransform m_Transform;
         HFMath::Vector2 m_Size = HFMath::Vector2::ZERO();
 };

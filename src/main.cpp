@@ -9,6 +9,8 @@
 #include "hf_input.h"
 #include <iostream>
 #include <string>
+#include <string.h>
+#include "level_loader.h"
 
 const float g_FPS_UPDATE_INTERVAL = 0.1f;
 float g_TimeSinceUpdatedFPS = 0.0f;
@@ -26,11 +28,13 @@ Game& g_Game = Game::GetInstance();
 // CollisionComponent g_SquareCollision2 = CollisionComponent();
 
 const int NUM_BLOCKS = 3;
-Block g_LevelBlocks[NUM_BLOCKS] = {
-    Block(HFMath::Vector2(1000.0f, 20.0f), HFMath::Vector2(-100, 450)),
-    Block(HFMath::Vector2(50.0f, 15.0f), HFMath::Vector2(100, 390)),
-    Block(HFMath::Vector2(50.0f, 15.0f), HFMath::Vector2(700, 390))
-};
+// Block g_LevelBlocks[NUM_BLOCKS] = {
+//     Block(HFMath::Vector2(1000.0f, 20.0f), HFMath::Vector2(-100, 450)),
+//     Block(HFMath::Vector2(50.0f, 15.0f), HFMath::Vector2(100, 390)),
+//     Block(HFMath::Vector2(50.0f, 15.0f), HFMath::Vector2(700, 390))
+// };
+
+std::vector<Block> g_Blocks;
 
 // Raycast g_raycast;
 
@@ -185,12 +189,25 @@ bool loadResources(SDL_Renderer** renderer)
 
 void AddBlocks()
 {
-    for ( int i = 0; i < NUM_BLOCKS; i++ )
+    // for ( int i = 0; i < NUM_BLOCKS; i++ )
+    // {
+    //     // g_Game.AddComponentCallback(&g_LevelBlocks[i], READY);
+    //     // g_Game.AddRenderComponent(&g_LevelBlocks[i]);
+    //     // g_Game.AddCollisionComponent(&(g_LevelBlocks[i].m_Collision));
+    //     g_Game.AddComponent(&g_LevelBlocks[i]);
+    // }
+
+    LevelLoader loader = LevelLoader(24);
+    char path[80];
+    sprintf(path, "%s/resources/level.hfl", SDL_GetBasePath());
+    g_Blocks = loader.loadBlocks(path, '#');
+
+    HFMath::Vector2 offset = HFMath::Vector2(-8, 0);
+
+    for (int i = 0; i < g_Blocks.size(); i++)
     {
-        // g_Game.AddComponentCallback(&g_LevelBlocks[i], READY);
-        // g_Game.AddRenderComponent(&g_LevelBlocks[i]);
-        // g_Game.AddCollisionComponent(&(g_LevelBlocks[i].m_Collision));
-        g_Game.AddComponent(&g_LevelBlocks[i]);
+        g_Blocks[i].m_Transform.SetGlobalPosition(g_Blocks[i].m_Transform.GetGlobalPosition() + offset);
+        g_Game.AddComponent(&g_Blocks[i]);
     }
 }
 
