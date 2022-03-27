@@ -105,6 +105,7 @@ int main(int argv, char** args)
             accumulator -= g_PHYSICS_UPDATE_TICK;
         }
 
+        HFInput::GetInstance().UpdateDownKeys();
 
         Update(deltaTime);
 

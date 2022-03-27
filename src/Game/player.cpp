@@ -36,12 +36,12 @@ void Player::Ready()
 
 void Player::Update(double deltaTime)
 {
-    Move(deltaTime);
+    // Move(deltaTime);
 }
 
 void Player::PhysicsUpdate(double deltaTime)
 {
-    // Move(deltaTime);
+    Move(deltaTime);
 }
 
 
