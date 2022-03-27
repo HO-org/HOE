@@ -104,10 +104,8 @@ int main(int argv, char** args)
             g_Game.PhysicsUpdateComponents(g_PHYSICS_UPDATE_TICK);
             accumulator -= g_PHYSICS_UPDATE_TICK;
         }
-
-        HFInput::GetInstance().UpdateDownKeys();
-
-        Update(deltaTime);
+        
+        // Update(deltaTime);
 
         DrawGame(&renderer);
 

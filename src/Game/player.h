@@ -25,7 +25,7 @@ class Player : public WorldComponent
         }
 
         virtual void Init();
-        virtual void Update(double deltaTime) override;
+        // virtual void Update(double deltaTime) override;
         virtual void PhysicsUpdate(double deltaTime) override;
         virtual void Ready() override;
 

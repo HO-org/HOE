@@ -34,10 +34,10 @@ void Player::Ready()
    
 }
 
-void Player::Update(double deltaTime)
-{
-    // Move(deltaTime);
-}
+// void Player::Update(double deltaTime)
+// {
+//     Move(deltaTime);
+// }
 
 void Player::PhysicsUpdate(double deltaTime)
 {
@@ -104,22 +104,28 @@ void Player::PlatformerMove(double deltaTime)
 
     if(inputSystem.IsKeyJustDown(SDLK_SPACE))
     {
+        printf("pressed jump\n");
         if (isOnFloor)
         {
             Jump();
+            // printf("jumped\n");
         }
         else if (m_HasDoubleJump)
         {
             Jump();
             m_HasDoubleJump = false;
+            // printf("used double jump\n");
         }
     }
 
     if (inputSystem.IsKeyJustDown(SDLK_LSHIFT))
     {
+        printf("shift\n");
         m_Velocity.SetX(dirX * m_DashForce);
         m_Velocity.SetY(-25.0f);
     }
+
+    // printf("has double jump: %d\n", (int)m_HasDoubleJump);
 }
 
 
