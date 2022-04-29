@@ -16,18 +16,18 @@ public:
         return instance;
     }
 
-    int getScreenWidth () { return m_ScreenWidth; }
-    int getScreenHeight () { return m_ScreenHeight; }
+    int getScreenWidth();
+    int getScreenHeight();
 
-    void initalize(int screenWidth, int screenHeight) { m_ScreenWidth = screenWidth; m_ScreenHeight = screenHeight; }
+    void initalize(int screenWidth, int screenHeight);
 
     std::vector<Component*> m_ReadyComponents;
     std::vector<Component*> m_UpdateComponents;
     std::vector<RenderComponent*> m_RenderComponents;
     std::vector<CollisionComponent*> m_CollisionComponents;
 
-    std::vector<Component*> GetComponents() { return m_Components; }
-    void AddComponent(Component* component) { m_Components.push_back(component); }
+    std::vector<Component*> GetComponents();
+    void AddComponent(Component* component);
     void AddRenderComponent(RenderComponent* component);
     void AddCollisionComponent(CollisionComponent* component);
     void AddComponentCallback(Component* component, CallbackType type);
@@ -35,11 +35,11 @@ public:
     void RemoveRenderComponent(Component* component);
     void RemoveCollisionComponent(Component* component);
 
-    void InitComponents() { for (Component* component : m_Components) { component->Init(); } }
-    void ReadyComponents() { for (Component* component : m_ReadyComponents ) { component->Ready(); } }
-    void UpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->Update(deltaTime); } }
-    void PhysicsUpdateComponents(double deltaTime) { for ( Component* component : m_UpdateComponents ) { component->PhysicsUpdate(deltaTime); } }
-    void DrawComponents(SDL_Renderer** renderer) { for (RenderComponent* component : m_RenderComponents) { component->Draw(renderer, m_MainCamera); } }
+    void InitComponents();
+    void ReadyComponents();
+    void UpdateComponents(double deltaTime);
+    void PhysicsUpdateComponents(double deltaTime);
+    void DrawComponents(SDL_Renderer** renderer);
 
     SDL_Renderer** m_CurRenderer = NULL;
 

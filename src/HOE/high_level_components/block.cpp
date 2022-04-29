@@ -2,6 +2,13 @@
 #include "hflog.h"
 #include "game.h"
 
+
+HFMath::Vector2 Block::GetSize()
+{
+    return m_Size;
+}
+
+
 void Block::Init()
 {
     Game& game = Game::GetInstance();

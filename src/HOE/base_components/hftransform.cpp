@@ -10,6 +10,36 @@
 
 // #include <algorithm>
 
+
+HFMath::Vector2 HFTransform::GetGlobalPosition()
+{
+    return m_GlobalPosition;
+}
+
+HFMath::Vector2 HFTransform::GetLocalPosition()
+{
+    return m_LocalPosition;
+}
+
+
+HFTransform* HFTransform::GetParent()
+{
+    return m_Parent;
+}
+
+
+std::vector<HFTransform*> HFTransform::GetChildren()
+{
+    return m_Children;
+}
+
+
+std::vector<CollisionComponent*> HFTransform::GetColliders()
+{
+    return m_Colliders;
+}
+
+
 void HFTransform::UpdatePositionInChildren()
 {
     for (HFTransform* child : m_Children)

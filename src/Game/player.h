@@ -13,14 +13,10 @@ class Player : public WorldComponent
 
         Player(float Pos_X, float Pos_Y)
         {
-            // m_Position.SetX(Pos_X);
-            // m_Position.SetY(Pos_Y);
             m_Transform.SetGlobalPosition(HFMath::Vector2(Pos_X, Pos_Y));
         }
 
         Player(HFMath::Vector2 initialPos) { 
-            // m_Position.SetX(initialPos.GetX());
-            // m_Position.SetY(initialPos.GetY());
             m_Transform.SetGlobalPosition(initialPos);
         }
 
@@ -30,18 +26,12 @@ class Player : public WorldComponent
         virtual void Ready() override;
 
         virtual ~Player() {}
-
-        // HFMath::Vector2 GetPosition() { return m_Position; }
         
         Sprite m_Sprite;
 
         CollisionComponent m_Collider = CollisionComponent();
-        // Texture2D getTexture() { return m_Texture; }
 
     private:
-        // HFMath::Vector2 m_Position;
-
-        // Texture2D m_Texture;
         Camera m_Camera;
 
         bool isOnFloor = false;
@@ -57,13 +47,6 @@ class Player : public WorldComponent
         float m_FallMultiplier = 1.25f;
 
         bool m_HasDoubleJump = false;
-
-        // float m_MaxSpeed = 2.0f;
-        // float m_Acceleration = 0.5f;
-        // float m_Deceleration = 1.0f;
-        // float m_JumpForce = 10.0f;
-        // float m_GRAVITY = 10.0f;
-        // float m_DashForce = 10.0f;
 
         void Move(double deltaTime);
         void PlatformerMove(double deltaTime);

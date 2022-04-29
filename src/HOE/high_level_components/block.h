@@ -23,7 +23,7 @@ class Block : public RenderComponent
         
         CollisionComponent m_Collision = CollisionComponent();
 
-        HFMath::Vector2 GetSize() { return m_Size; }
+        HFMath::Vector2 GetSize();
         HFTransform m_Transform;
 
     private:

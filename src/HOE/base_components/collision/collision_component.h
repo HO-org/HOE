@@ -17,8 +17,15 @@ struct CollidingSides
 class CollisionComponent : public WorldComponent
 {
     public:
-        CollisionComponent() { m_Transform = HFTransform(); m_Size = HFMath::Vector2::ZERO(); }
-        CollisionComponent(HFMath::Vector2 position, HFMath::Vector2 size) { m_Transform.SetGlobalPosition(position); m_Size = size; }
+        CollisionComponent()
+        {
+            m_Transform = HFTransform(); m_Size = HFMath::Vector2::ZERO();
+        }
+        
+        CollisionComponent(HFMath::Vector2 position, HFMath::Vector2 size)
+        {
+            m_Transform.SetGlobalPosition(position); m_Size = size;
+        }
 
         std::vector<CollisionComponent*> GetOverlappingComponents();
         bool IsOverlapping(CollisionComponent* other);

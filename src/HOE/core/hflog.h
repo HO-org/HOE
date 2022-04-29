@@ -6,6 +6,6 @@ class HFLog
     public:
         static void Log(const char* message)
         {
-            std::cout << message << std::endl;
+            std::cout << message << "\n";
         }
 };

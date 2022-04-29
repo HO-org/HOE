@@ -17,24 +17,24 @@ class HFTransform : public Component
 
         void SetGlobalPosition(HFMath::Vector2 targetPos);
         void SetLocalPosition(HFMath::Vector2 targetPos);
-        HFMath::Vector2 GetGlobalPosition() { return m_GlobalPosition; }
-        HFMath::Vector2 GetLocalPosition() { return m_LocalPosition; }
+        HFMath::Vector2 GetGlobalPosition();
+        HFMath::Vector2 GetLocalPosition();
 
         void UpdatePosition();
 
         bool MoveAndCollide(HFMath::Vector2 targetPos);
 
         void SetParent(HFTransform* target);
-        HFTransform* GetParent() { return m_Parent; }
+        HFTransform* GetParent();
 
         void AddChild(HFTransform* target);
-        std::vector<HFTransform*> GetChildren() { return m_Children; }
+        std::vector<HFTransform*> GetChildren();
 
         void SetParentLink(HFTransform* parent, HFTransform* child);
 
         void AddCollider(CollisionComponent* collider);
         void RemoveCollider(CollisionComponent* collider);
-        std::vector<CollisionComponent*> GetColliders() { return m_Colliders; }
+        std::vector<CollisionComponent*> GetColliders();
 
         virtual ~HFTransform() {}
 

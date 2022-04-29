@@ -2,6 +2,81 @@
 #include "hflog.h"
 #include <algorithm>
 
+
+int Game::getScreenWidth()
+{
+    return m_ScreenWidth;
+}
+
+
+int Game::getScreenHeight()
+{
+    return m_ScreenHeight;
+}
+
+
+void Game::initalize(int screenWidth, int screenHeight)
+{
+    m_ScreenWidth = screenWidth; m_ScreenHeight = screenHeight;
+}
+
+
+std::vector<Component*> Game::GetComponents()
+{
+    return m_Components;
+}
+
+void Game::AddComponent(Component* component)
+{
+    m_Components.push_back(component);
+}
+
+
+void Game::InitComponents()
+{
+    for (Component* component : m_Components)
+    {
+        component->Init();
+    }
+}
+
+
+void Game::ReadyComponents()
+{
+    for (Component* component : m_ReadyComponents )
+    {
+        component->Ready();
+    }
+}
+
+
+void Game::UpdateComponents(double deltaTime)
+{
+    for ( Component* component : m_UpdateComponents )
+    {
+        component->Update(deltaTime);
+    }
+}
+
+
+void Game::PhysicsUpdateComponents(double deltaTime)
+{
+    for ( Component* component : m_UpdateComponents )
+    {
+        component->PhysicsUpdate(deltaTime);
+    }
+}
+
+
+void Game::DrawComponents(SDL_Renderer** renderer)
+{
+    for (RenderComponent* component : m_RenderComponents)
+    {
+        component->Draw(renderer, m_MainCamera);
+    }
+}
+
+
 bool Game::ComponentInVector(Component* component, std::vector<Component*> v)
 {
     if (
