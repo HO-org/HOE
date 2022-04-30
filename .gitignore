@@ -1,5 +1,9 @@
 # Executables
-*.exe
+./*.exe
+build/*.exe
+obj/*.exe
+src/*.exe
+resources/*.exe
 *.out
 *.app
 
