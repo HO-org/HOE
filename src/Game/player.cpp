@@ -104,7 +104,7 @@ void Player::PlatformerMove(double deltaTime)
 
     if(inputSystem.IsKeyJustDown(SDLK_SPACE))
     {
-        printf("pressed jump\n");
+        // printf("pressed jump\n");
         if (isOnFloor)
         {
             Jump();
@@ -120,7 +120,7 @@ void Player::PlatformerMove(double deltaTime)
 
     if (inputSystem.IsKeyJustDown(SDLK_LSHIFT))
     {
-        printf("shift\n");
+        // printf("shift\n");
         m_Velocity.SetX(dirX * m_DashForce);
         m_Velocity.SetY(-25.0f);
     }
