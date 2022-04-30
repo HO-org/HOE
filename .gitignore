@@ -1,5 +1,5 @@
 # Executables
-./*.exe
+/*.exe
 build/*.exe
 obj/*.exe
 src/*.exe
