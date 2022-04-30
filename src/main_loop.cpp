@@ -7,19 +7,21 @@
 #include <string>
 #include <string.h>
 
-const float g_FPS_UPDATE_INTERVAL = 0.1f;
-float g_TimeSinceUpdatedFPS = 0.0f;
-float g_FPS = 0.0f;
+static const float g_FPS_UPDATE_INTERVAL = 0.1f;
+static float g_TimeSinceUpdatedFPS = 0.0f;
+static float g_FPS = 0.0f;
 
-const double g_PHYSICS_UPDATE_TICK = 1.0 / 144.0;
+static const double g_PHYSICS_UPDATE_TICK = 1.0 / 144.0;
 
 static Game& g_Game = Game::GetInstance();
 
 extern void HOEINIT_AddComponents();
-void Update(double deltaTime);
-void DrawGame(SDL_Renderer** renderer);
-bool init(SDL_Window** window, SDL_Renderer** renderer);
-void quit(SDL_Renderer** renderer, SDL_Window** window);
+
+static void Update(double deltaTime);
+static void DrawGame(SDL_Renderer** renderer);
+static bool init(SDL_Window** window, SDL_Renderer** renderer);
+static void quit(SDL_Renderer** renderer, SDL_Window** window);
+static void UpdateFPS(double deltaTime);
 
 int main(int argv, char** args)
 {
@@ -83,7 +85,7 @@ int main(int argv, char** args)
 }
 
 
-bool init(SDL_Window** window, SDL_Renderer** renderer)
+static bool init(SDL_Window** window, SDL_Renderer** renderer)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -130,7 +132,7 @@ bool init(SDL_Window** window, SDL_Renderer** renderer)
 }
 
 
-void quit(SDL_Renderer** renderer, SDL_Window** window)
+static void quit(SDL_Renderer** renderer, SDL_Window** window)
 {
     SDL_DestroyRenderer(*renderer);
     SDL_DestroyWindow(*window);
@@ -142,14 +144,14 @@ void quit(SDL_Renderer** renderer, SDL_Window** window)
 }
 
 
-void Update(double deltaTime)
+static void Update(double deltaTime)
 {
     UpdateFPS(deltaTime);
     g_Game.UpdateComponents(deltaTime);
 }
 
 
-void DrawGame(SDL_Renderer** renderer)
+static void DrawGame(SDL_Renderer** renderer)
 {
     SDL_SetRenderDrawColor(*renderer, 255, 255, 255, 255);
     SDL_RenderClear(*renderer);
@@ -160,7 +162,7 @@ void DrawGame(SDL_Renderer** renderer)
 }
 
 
-void UpdateFPS(double deltaTime)
+static void UpdateFPS(double deltaTime)
 {
     g_TimeSinceUpdatedFPS += deltaTime;
     if (deltaTime && g_TimeSinceUpdatedFPS > g_FPS_UPDATE_INTERVAL)
