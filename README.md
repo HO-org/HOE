@@ -16,9 +16,7 @@ It should compile fine on Linux with a few tweaks, which is being worked on. Mac
 ## Compiling on Windows 10
 
 ### Requirements
-[MinGW-w32](https://sourceforge.net/projects/mingw/files/)
-
-[Mingw installation guide (download from the previous link)](https://www.youtube.com/watch?v=sXW2VLrQ3Bs)
+MinGW-w64 ([Installation Instructions](https://github.com/hohfchns/HOE/blob/master/INSTALLMINGW64.md))
 
 [git](https://git-scm.com/downloads)
 
