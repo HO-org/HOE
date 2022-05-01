@@ -10,7 +10,7 @@ project "HOEngine"
     includedirs { "src/**" }
     
     -- libdirs { "lib", "../lib", "vendor/SDL2-2.0.20/x86_64-w64-mingw32/lib", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/lib" }
-    -- libdirs { "vendor/**" }
+    -- libdirs { "vendor/vendor/SDL2-2.0.20/x86_64-w64-mingw32/**", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/**" }
     libdirs { "vendor/**" }
 
     links { "mingw32", "SDL2main", "SDL2", "SDL2_image" }
