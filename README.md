@@ -13,6 +13,18 @@ Currently the engine and game are a part of the same "project", and need to be c
 The project uses the Premake build system, and only uses cross-platform libraries and features, though it is currently only tested on Windows.
 It should compile fine on Linux with a few tweaks, which is being worked on. MacOS is unknown as I have never used it.
 
+---
+#### The build script
+The build script is functionally the same between Windows and Linux.
+
+The first parameter is the release mode. It should be either ```debug``` or ```release```.
+
+The second parameter ```run``` is optional and will start the game if included.
+
+The game can also be launched from the executable ```HOEEngine.exe (Windows) / HOEngine.game (Linux)``` in the root project directory
+
+The executable can be moved or shipped as long as the ```resources``` folder, and on Windows, the ```.dll``` files are also in the same directory as it, otherwise the game will fail to run.
+
 ## Compiling on Windows 10
 
 ### Requirements
@@ -29,10 +41,23 @@ git clone --recursive https://github.com/hohfchns/HOE/
 cd HOE
 .\build.bat debug run
 ```
-The first parameter for the build script is the debug or release mode.
 
-The second parameter is optional and will start the game if included.
+## Compiling on Linux
+### Install the dependencies ``git g++ sdl2 sdl2_image``
+#### Command on Ubuntu (tested on 22.04)
+``` bash
+sudo apt install git g++ libsdl2-dev libsdl2-image-dev
+```
+#### Command on Arch / Arch based
+``` bash
+sudo pacman -Syu git sdl2 sdl2_image
+```
+If g++/gcc is not installed by default, use the command ```sudo pacman -Syu gcc```.
+The libraries can also be found in the 3rd party Pamac GUI package manager, via native or AUR packages.
 
-The game can also be launched from the executable ```HOEEngine.exe``` in the root project directory
-
-The executable can be moved or shipped as long as the ```resources``` folder as well as the ```.dll``` files are in the same directory as it, otherwise the game will fail to run.
+### Compilation Process
+``` bash
+git clone https://github.com/hohfchns/HOE
+cd HOE
+./build debug run
+```
