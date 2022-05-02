@@ -1,5 +1,5 @@
 #!/bin/bash
-rm ./*.dll
+rm -r ./vendor/runtime
 rm ./HOEngine.game
 
 ./vendor/premake5/premake5 gmake2

@@ -1,3 +1,4 @@
+move .\vendor\runtime\* .\
 del .\HOEngine.exe
 
 .\vendor\premake5\premake5.exe gmake2

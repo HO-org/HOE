@@ -14,19 +14,21 @@ project "HOEngine"
 	    includedirs { "include", "vendor/SDL2-2.0.20/x86_64-w64-mingw32/include/SDL2", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/include/SDL2" }
 	    
 	    libdirs { "vendor/SDL2-2.0.20/x86_64-w64-mingw32/**", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/**" }
+        removelibdirs { "vendor/runtime/**" }
     	links { "mingw32", "SDL2main", "SDL2", "SDL2_image" }
     	
-    	targetname "HOEngine.exe"
+    	targetname "HOEngine"
 	
 	filter "system:linux"
 		includedirs { "/usr/include/SDL2" }
 		
 		libdirs { os.findlib("SDL2"), os.findlib("SDL2_image") }
-		removelibdirs { "/**/lib32" } 
+		removelibdirs { "/**/lib32" }
     	links { "SDL2", "SDL2_image" }
     	
     	targetname "HOEngine.game"
 --		includedirs { "include/SDL2-linux" }
+    filter {}
 	
     includedirs { "src/**" }
 	
