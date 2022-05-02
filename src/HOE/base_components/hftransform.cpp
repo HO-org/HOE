@@ -2,7 +2,6 @@
 #include "hfmath.h"
 #include <iostream>
 #include "collision_component.h"
-#include "hflog.h"
 #include "raycast.h"
 #include "game.h"
 #include <math.h>

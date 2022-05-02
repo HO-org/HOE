@@ -1,5 +1,4 @@
 #include "block.h"
-#include "hflog.h"
 #include "game.h"
 
 
@@ -26,7 +25,6 @@ void Block::Ready()
 
 void Block::Draw(SDL_Renderer** renderer, Camera* mainCamera)
 {
-    // HFLog::Log("Rendering block");
     // DrawRectangle(m_Transform.GetGlobalPosition().GetX(), m_Transform.GetGlobalPosition().GetY(), m_Size.GetX(), m_Size.GetY(), m_Color);
     HFMath::Vector2 pos = m_Transform.GetGlobalPosition();
     if (mainCamera != NULL)

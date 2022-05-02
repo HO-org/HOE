@@ -1,7 +1,6 @@
 #include "player.h"
 #include "game.h"
 #include <iostream>
-#include "hflog.h"
 #include "hf_input.h"
 #include <math.h>
 

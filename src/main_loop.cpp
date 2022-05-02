@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <string.h>
+#include "hflog.h"
 
 static const float g_FPS_UPDATE_INTERVAL = 0.1f;
 static float g_TimeSinceUpdatedFPS = 0.0f;
@@ -14,6 +15,7 @@ static float g_FPS = 0.0f;
 static const double g_PHYSICS_UPDATE_TICK = 1.0 / 144.0;
 
 static Game& g_Game = Game::GetInstance();
+static HFLog& g_Logger = HFLog::GetInstance();
 
 extern void HOEINIT_AddComponents();
 
@@ -23,32 +25,45 @@ static bool init(SDL_Window** window, SDL_Renderer** renderer);
 static void quit(SDL_Renderer** renderer, SDL_Window** window);
 static void UpdateFPS(double deltaTime);
 
-int main(int argv, char** args)
+int main(int argc, char* args[])
 {
+    g_Logger.Init(argc, args);
+    g_Logger.Log(HFLog::HF_INFO, "HOE starting!");
+
     g_Game.initalize(800, 600);
+    g_Logger.DLog(HFLog::HF_INFO, "Game module initialized.");
+
 
     SDL_Window* window;
     SDL_Renderer* renderer;
 
     if (!init(&window, &renderer))
     {
+        g_Logger.Log(HFLog::HF_ERROR, "Failed to init engine!");
+
         quit(&renderer, &window);
         return 0;
     }
 
     g_Game.m_CurRenderer = &renderer;
 
+    g_Logger.DLog(HFLog::HF_INFO, "Hooking into game and adding components...");
     HOEINIT_AddComponents();
+
+    g_Logger.DLog(HFLog::HF_INFO, "Initializing components...");
     g_Game.InitComponents();
 
+    g_Logger.DLog(HFLog::HF_INFO, "Calling components ready...");
     g_Game.ReadyComponents();
 
+    g_Logger.DLog(HFLog::HF_INFO, "Initializing time...");
     Uint64 curTime = SDL_GetPerformanceCounter();
     Uint64 lastTime = 0;
     double deltaTime = 0;
     double accumulator = 0;
 
     bool gameLoop = true;
+    g_Logger.Log(HFLog::HF_WARNING, "Game loop starting!");
     // Game Loop
     while (gameLoop)
     {
@@ -67,6 +82,7 @@ int main(int argv, char** args)
             inputSystem.UpdateDownKeys();
             if (inputSystem.m_Quit)
             {
+                g_Logger.Log(HFLog::HF_WARNING, "Recieved quit signal, closing game loop.");
                 gameLoop = false;
             }
 
@@ -89,33 +105,33 @@ static bool init(SDL_Window** window, SDL_Renderer** renderer)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        printf( "Could not init SDL_VIDEO! SDL Error: %s\n", SDL_GetError());
+        g_Logger.Log(HFLog::HF_ERROR, std::string("Could not init SDL_VIDEO! SDL Error: ") + SDL_GetError());
         return false;
     }
     
     if (SDL_Init(SDL_INIT_TIMER) < 0)
     {
-        printf( "Could not init SDL_TIMER! SDL Error: %s\n", SDL_GetError());
+        g_Logger.Log(HFLog::HF_ERROR, std::string("Could not init SDL_TIMER! SDL Error: ") + SDL_GetError());
         return false;
     }
 
     if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
     {
-        printf( "Warning: Linear texture filtering not enabled!" );
+        g_Logger.Log(HFLog::HF_WARNING, std::string("Linear texture filtering not enabled!"));
     }
 
     *window = SDL_CreateWindow("HOEngine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                               g_Game.getScreenWidth(), g_Game.getScreenHeight(), SDL_WINDOW_SHOWN);
     if (*window == NULL)
     {
-        printf("Could not create SDL Window! SDL Error: %s\n", SDL_GetError());
+        g_Logger.Log(HFLog::HF_ERROR, std::string("Could not create SDL Window! SDL Error: ") + SDL_GetError());
         return false;
     }
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
     if (*renderer == NULL)
     {
-        printf("Could not create renderer! SDL Error: %s\n", SDL_GetError());
+        g_Logger.Log(HFLog::HF_ERROR, std::string("Could not create renderer! SDL Error: ") + SDL_GetError());
         return false;
     }
 
@@ -124,7 +140,7 @@ static bool init(SDL_Window** window, SDL_Renderer** renderer)
     int imgFlags = IMG_INIT_PNG;
     if( !( IMG_Init( imgFlags ) & imgFlags ) )
     {
-        printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+        g_Logger.Log(HFLog::HF_ERROR, std::string("SDL_image could not initialize! SDL_image Error: ") + IMG_GetError());
         return false;
     }
 
@@ -134,6 +150,8 @@ static bool init(SDL_Window** window, SDL_Renderer** renderer)
 
 static void quit(SDL_Renderer** renderer, SDL_Window** window)
 {
+    g_Logger.Log(HFLog::HF_INFO, "Quitting SDL2.");
+
     SDL_DestroyRenderer(*renderer);
     SDL_DestroyWindow(*window);
     *window = NULL;

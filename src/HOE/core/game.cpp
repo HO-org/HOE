@@ -1,5 +1,4 @@
 #include "game.h"
-#include "hflog.h"
 #include <algorithm>
 
 
@@ -94,20 +93,19 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
         case UPDATE:
             if (ComponentInVector(component, m_UpdateComponents)) 
             { 
-                HFLog::Log("Component already registered as an update component!");
+                printf("Component already registered as an update component!");
                 break;
             }
 
 
             m_UpdateComponents.push_back(component);
             component->registeredWhere = UPDATE;
-            // HFLog::Log("so far so good");
             break;
 
         case READY:
             if (ComponentInVector(component, m_ReadyComponents)) 
             { 
-                HFLog::Log("Component already registered as a ready component!");
+                printf("Component already registered as a ready component!");
                 break;
             }
 
@@ -118,7 +116,7 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
         case READYUPDATE:
             if (ComponentInVector(component, m_UpdateComponents) || ComponentInVector(component, m_ReadyComponents)) 
             { 
-                HFLog::Log("Component already registered as an update/ready component!");
+                printf("Component already registered as an update/ready component!");
                 break;
             }
 
@@ -128,7 +126,7 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
             break;
 
         default:
-            HFLog::Log("Tried to add a component with an invalid type passed");
+            printf("Tried to add a component with an invalid type passed");
             break;
     }
 }
@@ -141,7 +139,7 @@ void Game::AddRenderComponent(RenderComponent* component)
         std::find_if(m_RenderComponents.begin(), m_RenderComponents.end(), [component](RenderComponent* c) { return c == component; }) != m_RenderComponents.end()
     )
     {
-        HFLog::Log("Component already registered as a render component!");
+        printf("Component already registered as a render component!");
         return;
     }
 
@@ -177,7 +175,7 @@ void Game::AddCollisionComponent(CollisionComponent* component)
         std::find_if(m_CollisionComponents.begin(), m_CollisionComponents.end(), [component](CollisionComponent* c) { return c == component; }) != m_CollisionComponents.end()
     )
     {
-        HFLog::Log("Component already registered as a collision component!");
+        printf("Component already registered as a collision component!");
         return;
     }
 
