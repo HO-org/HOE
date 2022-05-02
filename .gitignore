@@ -1,4 +1,5 @@
 # Executables
+*.game
 /*.exe
 build/*.exe
 obj/*.exe

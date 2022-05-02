@@ -1,0 +1,10 @@
+#!/bin/bash
+rm ./HOEngine.game
+
+./vendor/premake5/premake5 gmake2
+make -j8 config="$1"
+
+if [ "$2" == "run" ]
+then
+	./HOEngine.game
+fi
