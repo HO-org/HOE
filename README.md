@@ -44,15 +44,15 @@ cd HOE
 
 ## Compiling on Linux
 ### Install the dependencies ``git g++ sdl2 sdl2_image``
-#### Command on Ubuntu (tested on 22.04)
+#### Commands on Ubuntu (tested on 22.04)
 ``` bash
-sudo apt install git g++ libsdl2-dev libsdl2-image-dev
+sudo apt update
+sudo apt install make git g++ libsdl2-dev libsdl2-image-dev
 ```
 #### Command on Arch / Arch based
 ``` bash
-sudo pacman -Syu git sdl2 sdl2_image
+sudo pacman -Syu make gcc git sdl2 sdl2_image
 ```
-If g++/gcc is not installed by default, use the command ```sudo pacman -Syu gcc```.
 The libraries can also be found in the 3rd party Pamac GUI package manager, via native or AUR packages.
 
 ### Compilation Process
