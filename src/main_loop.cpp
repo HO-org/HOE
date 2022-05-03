@@ -31,7 +31,6 @@ int main(int argc, char* args[])
     g_Logger.Log(HFLog::HF_INFO, "HOE starting!", __FILE__, __LINE__);
 
     g_Game.initalize(800, 600);
-    g_Logger.DLog(HFLog::HF_INFO, "Game module initialized.", __FILE__, __LINE__);
 
     SDL_Window* window;
     SDL_Renderer* renderer;

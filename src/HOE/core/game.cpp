@@ -1,5 +1,9 @@
 #include "game.h"
 #include <algorithm>
+#include "hflog.h"
+
+
+static HFLog& g_Logger = HFLog::GetInstance();
 
 
 int Game::getScreenWidth()
@@ -16,7 +20,10 @@ int Game::getScreenHeight()
 
 void Game::initalize(int screenWidth, int screenHeight)
 {
-    m_ScreenWidth = screenWidth; m_ScreenHeight = screenHeight;
+    m_ScreenWidth = screenWidth;
+    m_ScreenHeight = screenHeight;
+
+    g_Logger.Log(HFLog::HF_INFO, "Game module initialized.", __FILE__, __LINE__);
 }
 
 
@@ -28,6 +35,8 @@ std::vector<Component*> Game::GetComponents()
 void Game::AddComponent(Component* component)
 {
     m_Components.push_back(component);
+
+    g_Logger.Log(HFLog::HF_FILE_ONLY, "Added component...", __FILE__, __LINE__);
 }
 
 
@@ -37,6 +46,8 @@ void Game::InitComponents()
     {
         component->Init();
     }
+
+    g_Logger.DLog(HFLog::HF_INFO, "Components Initialized!", __FILE__, __LINE__);
 }
 
 
@@ -46,6 +57,8 @@ void Game::ReadyComponents()
     {
         component->Ready();
     }
+
+    g_Logger.DLog(HFLog::HF_INFO, "Components ready!", __FILE__, __LINE__);
 }
 
 
@@ -139,7 +152,7 @@ void Game::AddRenderComponent(RenderComponent* component)
         std::find_if(m_RenderComponents.begin(), m_RenderComponents.end(), [component](RenderComponent* c) { return c == component; }) != m_RenderComponents.end()
     )
     {
-        printf("Component already registered as a render component!");
+        g_Logger.Log(HFLog::HF_WARNING, "Tried to add render component that is already registered!", __FILE__, __LINE__);
         return;
     }
 
@@ -166,6 +179,8 @@ void Game::AddRenderComponent(RenderComponent* component)
         default:
             break;
     }
+
+    g_Logger.Log(HFLog::HF_FILE_ONLY, "Added render component.", __FILE__, __LINE__);
 }
 
 void Game::AddCollisionComponent(CollisionComponent* component)
@@ -175,7 +190,7 @@ void Game::AddCollisionComponent(CollisionComponent* component)
         std::find_if(m_CollisionComponents.begin(), m_CollisionComponents.end(), [component](CollisionComponent* c) { return c == component; }) != m_CollisionComponents.end()
     )
     {
-        printf("Component already registered as a collision component!");
+        g_Logger.Log(HFLog::HF_WARNING, "Tried to add collision component that is already registered!", __FILE__, __LINE__);
         return;
     }
 
@@ -202,14 +217,16 @@ void Game::AddCollisionComponent(CollisionComponent* component)
         default:
             break;
     }
+
+    g_Logger.Log(HFLog::HF_FILE_ONLY, "Added collision component.", __FILE__, __LINE__);
 }
 
 
 void Game::RemoveComponent(Component* component, CallbackType type)
 {
-
+    g_Logger.Log(HFLog::HF_ERROR, "CURRENTLY REMOVING COMPONENTS IS NOT IMPLEMENTED", __FILE__, __LINE__);
 }
 
-void Game::RemoveRenderComponent(Component* component) {}
+void Game::RemoveRenderComponent(Component* component) { g_Logger.Log(HFLog::HF_ERROR, "CURRENTLY REMOVING COMPONENTS IS NOT IMPLEMENTED", __FILE__, __LINE__); }
 
-void Game::RemoveCollisionComponent(Component* component) {}
+void Game::RemoveCollisionComponent(Component* component) { g_Logger.Log(HFLog::HF_ERROR, "CURRENTLY REMOVING COMPONENTS IS NOT IMPLEMENTED", __FILE__, __LINE__); }

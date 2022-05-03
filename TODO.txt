@@ -1,2 +1,3 @@
 TODO:
-Add physics update, (urgent!!!)
+Implement component names/identifiers
+Implement removing components
