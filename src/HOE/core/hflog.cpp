@@ -2,6 +2,16 @@
 #include "loguru.hpp"
 #include <stdio.h>
 
+
+// loguru::Verbosity GetVerb(int verbosity)
+// {
+//     if (verbosity == 1)
+//     {
+//         return 1;
+//     }
+// }
+
+
 void HFLog::Init(int argc, char* argv[])
 {
     if (initialized)
@@ -13,8 +23,8 @@ void HFLog::Init(int argc, char* argv[])
     loguru::init(argc, argv);
 
     loguru::add_file("logs/master.log", loguru::Append, loguru::Verbosity_MAX);
-
     loguru::add_file("logs/latest_readable.log", loguru::Truncate, loguru::Verbosity_INFO);
+    loguru::add_file("logs/file_log.log", loguru::Truncate, loguru::Verbosity_8);
 
     loguru::g_stderr_verbosity = 1;
 
@@ -22,69 +32,40 @@ void HFLog::Init(int argc, char* argv[])
 }
 
 
-void HFLog::Log(int verbosity, std::string message)
+void HFLog::Log(int verbosity, std::string message, const char* file, unsigned int line)
 {
-    if (verbosity == 0)
+    loguru::Verbosity logVerb = verbosity;
+    // VLOG_F(logVerb, message.c_str());
+    loguru::log(logVerb, file, line, message.c_str());
+}
+
+void HFLog::LogIf(bool condition, int verbosity, std::string message, const char* file, unsigned int line)
+{
+    loguru::Verbosity logVerb = verbosity;
+    // VLOG_IF_F(logVerb, condition, message.c_str());
+    if (condition)
     {
-        LOG_F(INFO, message.c_str());
-    }
-    else if (verbosity == 5)
-    {
-        LOG_F(WARNING, message.c_str());
-    }
-    else if (verbosity == 9)
-    {
-        LOG_F(ERROR, message.c_str());
+        loguru::log(logVerb, file, line, message.c_str());
     }
 }
 
-
-void HFLog::LogIf(bool condition, int verbosity, std::string message)
+void HFLog::DLog(int verbosity, std::string message, const char* file, unsigned int line)
 {
-    if (verbosity == 0)
-    {
-        LOG_IF_F(INFO, condition, message.c_str());
-    }
-    else if (verbosity == 5)
-    {
-        LOG_IF_F(WARNING, condition, message.c_str());
-    }
-    else if (verbosity == 9)
-    {
-        LOG_IF_F(ERROR, condition, message.c_str());
-    }
+    // DVLOG_F(logVerb, message.c_str());
+    #if LOGURU_DEBUG_LOGGING
+        loguru::Verbosity logVerb = verbosity;
+        loguru::log(logVerb, file, line, message.c_str());
+    #endif
 }
 
-
-void HFLog::DLog(int verbosity, std::string message)
+void HFLog::DLogIf(bool condition, int verbosity, std::string message, const char* file, unsigned int line)
 {
-    if (verbosity == 0)
-    {
-        DLOG_F(INFO, message.c_str());
-    }
-    else if (verbosity == 5)
-    {
-        DLOG_F(WARNING, message.c_str());
-    }
-    else if (verbosity == 9)
-    {
-        DLOG_F(ERROR, message.c_str());
-    }
-}
-
-
-void HFLog::DLogIf(bool condition, int verbosity, std::string message)
-{
-    if (verbosity == 0)
-    {
-        DLOG_IF_F(INFO, condition, message.c_str());
-    }
-    else if (verbosity == 5)
-    {
-        DLOG_IF_F(WARNING, condition, message.c_str());
-    }
-    else if (verbosity == 9)
-    {
-        DLOG_IF_F(ERROR, condition, message.c_str());
-    }
+    // DVLOG_IF_F(logVerb, condition, message.c_str());
+    #if LOGURU_DEBUG_LOGGING
+        loguru::Verbosity logVerb = verbosity;
+        if (condition)
+        {
+            loguru::log(logVerb, file, line, message.c_str());
+        }
+    #endif
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "loguru.hpp"
 #include <string>
+
 
 class HFLog
 {
@@ -8,8 +8,9 @@ public:
     enum Vebosities
     {
         HF_INFO = 0,
-        HF_WARNING = 5,
-        HF_ERROR = 9
+        HF_FILE_ONLY = 8,
+        HF_WARNING = -1,
+        HF_ERROR = -2
     };
 
 public:
@@ -21,13 +22,13 @@ public:
 
     void Init(int argc, char* argv[]);
 
-    void Log(int verbosity, std::string message);
+    void Log(int verbosity, std::string message, const char* file, unsigned int line);
 
-    void LogIf(bool condition, int verbosity, std::string message);
+    void LogIf(bool condition, int verbosity, std::string message, const char* file, unsigned int line);
 
-    void DLog(int verbosity, std::string message);
+    void DLog(int verbosity, std::string message, const char* file, unsigned int line);
 
-    void DLogIf(bool condition, int verbosity, std::string message);
+    void DLogIf(bool condition, int verbosity, std::string message, const char* file, unsigned int line);
 
 private:
     HFLog() {} ;
