@@ -17,8 +17,8 @@ void Player::Init()
     m_Transform.AddChild(&m_Sprite.m_Transform);
 
     m_Collider.m_Transform.SetGlobalPosition(HFMath::Vector2(0.0f, 0.0f));
-    m_Collider.m_Size.SetX(32.0f);
-    m_Collider.m_Size.SetY(32.0f);
+    m_Collider.m_Size.SetX(24.0f);
+    m_Collider.m_Size.SetY(24.0f);
     m_Transform.AddChild(&m_Collider.m_Transform);
     m_Transform.AddCollider(&m_Collider);
 
@@ -26,11 +26,16 @@ void Player::Init()
     startPos.SetX(400);
     startPos.SetY(300);
     m_Transform.SetGlobalPosition(startPos);
+
+    m_Transform.AddChild(&m_Camera.m_Transform);
 }
 
 void Player::Ready()
 {
-   
+    Game& game = Game::GetInstance();
+    game.m_MainCamera = &m_Camera;
+    m_Camera.m_Zoom = m_CameraZoom;
+    m_Camera.SetCenter(m_Transform.GetGlobalPosition());
 }
 
 // void Player::Update(double deltaTime)
