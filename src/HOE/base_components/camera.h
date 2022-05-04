@@ -13,4 +13,6 @@ public:
     }
 
     void SetCenter(HFMath::Vector2 targetPos);
+
+    float m_Zoom = 1.0f;
 };

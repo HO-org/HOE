@@ -39,11 +39,14 @@ public:
     void ReadyComponents();
     void UpdateComponents(double deltaTime);
     void PhysicsUpdateComponents(double deltaTime);
-    void DrawComponents(SDL_Renderer** renderer);
+    void DrawComponents(SDL_Renderer** renderer, bool shouldZoom);
 
     SDL_Renderer** m_CurRenderer = NULL;
 
-    Camera* m_MainCamera;
+    Camera m_DefaultCamera = Camera();
+    Camera* m_MainCamera = &m_DefaultCamera;
+
+    const char* RENDER_SCALE_MODE = "1";
 
 private:
     Game() {} ;

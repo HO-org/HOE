@@ -2,10 +2,17 @@
 #include "SDL_image.h"
 #include "game.h"
 #include "hfmath.h"
+#include "hflog.h"
 
 
 bool Sprite::load(SDL_Renderer** renderer, std::string path)
 {
+    const char* prevQuality = SDL_GetHint(SDL_HINT_RENDER_SCALE_QUALITY);
+    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "0" ) )
+    {
+        HFLog::GetInstance().Log(HFLog::HF_WARNING, std::string("Could not set render scale quality! SDL Error: ") + SDL_GetError(), __FILE__, __LINE__);
+    }
+
     if(m_Texture != NULL)
     {
         freeResources();
@@ -17,6 +24,7 @@ bool Sprite::load(SDL_Renderer** renderer, std::string path)
     if (surface == NULL)
     {
         printf("Could not load image at %s. IMG_Load Error: %s\n", path.c_str(), IMG_GetError());
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, prevQuality);
         return false;
     }
 
@@ -27,6 +35,7 @@ bool Sprite::load(SDL_Renderer** renderer, std::string path)
     {
         printf("Could not create texture from %s. SDL Error: %s\n", path.c_str(), SDL_GetError());
         SDL_FreeSurface(surface);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, prevQuality);
         return false;
     }
 
@@ -36,6 +45,8 @@ bool Sprite::load(SDL_Renderer** renderer, std::string path)
     SDL_FreeSurface(surface);
 
     m_Texture = texture;
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, prevQuality);
 
     return true;
 }

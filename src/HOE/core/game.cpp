@@ -234,8 +234,13 @@ void Game::PhysicsUpdateComponents(double deltaTime)
 }
 
 
-void Game::DrawComponents(SDL_Renderer** renderer)
+void Game::DrawComponents(SDL_Renderer** renderer, bool shouldZoom)
 {
+    if (shouldZoom)
+    {
+        SDL_RenderSetScale(*renderer, m_MainCamera->m_Zoom, m_MainCamera->m_Zoom); 
+    }
+
     for (RenderComponent* component : m_RenderComponents)
     {
         component->Draw(renderer, m_MainCamera);

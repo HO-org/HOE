@@ -113,7 +113,7 @@ static bool init(SDL_Window** window, SDL_Renderer** renderer)
         return false;
     }
 
-    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
+    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, g_Game.RENDER_SCALE_MODE ) )
     {
         g_Logger.Log(HFLog::HF_WARNING, std::string("Linear texture filtering not enabled!"), __FILE__, __LINE__);
     }
@@ -172,7 +172,7 @@ static void DrawGame(SDL_Renderer** renderer)
     SDL_SetRenderDrawColor(*renderer, 255, 255, 255, 255);
     SDL_RenderClear(*renderer);
 
-    g_Game.DrawComponents(renderer);
+    g_Game.DrawComponents(renderer, true);
 
     SDL_RenderPresent(*renderer);
 }
