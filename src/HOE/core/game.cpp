@@ -52,7 +52,7 @@ std::string Game::GetCompIdentity(Component* component)
     return std::string(component->m_Name) + ":id=" + std::to_string(component->id);
 }
 
-bool Game::CheckCompIdentity(Component* component)
+bool Game::ValidateCompIdentity(Component* component)
 {
     if (!component->id)
     {
@@ -173,7 +173,7 @@ void Game::InitComponents()
 {
     for (Component* component : m_Components)
     {
-        if (!CheckCompIdentity(component))
+        if (!ValidateCompIdentity(component))
         {
             continue;
         }
@@ -183,7 +183,7 @@ void Game::InitComponents()
 
     for (RenderComponent* component : m_RenderComponents)
     {
-        if (!CheckCompIdentity(component))
+        if (!ValidateCompIdentity(component))
         {
             continue;
         }
@@ -193,7 +193,7 @@ void Game::InitComponents()
 
     for (CollisionComponent* component : m_CollisionComponents)
     {
-        if (!CheckCompIdentity(component))
+        if (!ValidateCompIdentity(component))
         {
             continue;
         }

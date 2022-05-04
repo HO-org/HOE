@@ -52,7 +52,7 @@ private:
 
     void SetCompID(Component* component);
     std::string GetCompIdentity(Component* component);
-    bool CheckCompIdentity(Component* component);
+    bool ValidateCompIdentity(Component* component);
 
     int m_ScreenWidth;
     int m_ScreenHeight;
