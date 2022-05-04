@@ -80,7 +80,7 @@ int main(int argc, char* args[])
             inputSystem.UpdateDownKeys();
             if (inputSystem.m_Quit)
             {
-                g_Logger.Log(HFLog::HF_WARNING, "Recieved quit signal, closing game loop.", __FILE__, __LINE__);
+                g_Logger.Log(HFLog::HF_WARNING, "Received quit signal, closing game loop.", __FILE__, __LINE__);
                 gameLoop = false;
             }
 
