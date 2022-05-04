@@ -13,7 +13,7 @@ void Block::Init()
     Game& game = Game::GetInstance();
 
     game.AddComponentCallback(this, READY);
-    game.AddRenderComponent(this);
+    // game.AddRenderComponent(this);
     game.AddCollisionComponent(&m_Collision);
 }
 

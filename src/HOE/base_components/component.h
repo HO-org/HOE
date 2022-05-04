@@ -1,5 +1,6 @@
 #pragma once
 #include "enums.h"
+#include <string>
 
 class Component
 {
@@ -15,4 +16,9 @@ class Component
         virtual ~Component() {}
 
         CallbackType registeredWhere = NOCALLBACK;
+
+        std::string m_Name;
+
+    private:
+        int id = 0;
 };

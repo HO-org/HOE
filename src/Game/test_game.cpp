@@ -24,7 +24,7 @@ void AddBlocks()
     for (int i = 0; i < g_Blocks.size(); i++)
     {
         g_Blocks[i].m_Transform.SetGlobalPosition(g_Blocks[i].m_Transform.GetGlobalPosition() + offset);
-        g_Game.AddComponent(&g_Blocks[i]);
+        g_Game.AddRenderComponent(&g_Blocks[i]);
     }
 }
 

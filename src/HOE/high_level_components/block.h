@@ -3,6 +3,7 @@
 #include "collision_component.h"
 #include "misc.h"
 #include "SDL.h"
+#include <string>
 
 class Block : public RenderComponent
 {
@@ -12,11 +13,20 @@ class Block : public RenderComponent
             m_Size = size;
             m_Collision.m_Size = size;
             m_Transform.SetGlobalPosition(position);
+            m_Name = "Block";
         }
         Block(HFMath::Vector2 size)
         {
             m_Size = size;
             m_Collision.m_Size = size;
+            m_Name = "Block";
+        }
+        Block(HFMath::Vector2 size, HFMath::Vector2 position, std::string name)
+        {
+            m_Size = size;
+            m_Collision.m_Size = size;
+            m_Transform.SetGlobalPosition(position);
+            m_Name = name;
         }
 
         virtual ~Block() {}
@@ -25,6 +35,7 @@ class Block : public RenderComponent
 
         HFMath::Vector2 GetSize();
         HFTransform m_Transform;
+
 
     private:
         virtual void Init() override;

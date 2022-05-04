@@ -13,6 +13,7 @@ class HFTransform : public Component
         {
             m_GlobalPosition = HFMath::Vector2::ZERO();
             m_LocalPosition = HFMath::Vector2::ZERO();
+            m_Name = "Transform";
         }
 
         void SetGlobalPosition(HFMath::Vector2 targetPos);

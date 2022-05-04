@@ -3,17 +3,6 @@
 #include "game.h"
 #include "hfmath.h"
 
-Sprite::Sprite()
-{
-    m_Texture = NULL;
-    m_Width = 0;
-    m_Height = 0;
-}
-
-Sprite::~Sprite()
-{
-    freeResources();
-}
 
 bool Sprite::load(SDL_Renderer** renderer, std::string path)
 {

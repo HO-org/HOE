@@ -1,7 +1,9 @@
 #include "game.h"
 #include <algorithm>
 #include "hflog.h"
-
+#include <sstream>
+#include <iostream>
+#include <string>
 
 static HFLog& g_Logger = HFLog::GetInstance();
 
@@ -11,12 +13,10 @@ int Game::getScreenWidth()
     return m_ScreenWidth;
 }
 
-
 int Game::getScreenHeight()
 {
     return m_ScreenHeight;
 }
-
 
 void Game::initalize(int screenWidth, int screenHeight)
 {
@@ -32,11 +32,140 @@ std::vector<Component*> Game::GetComponents()
     return m_Components;
 }
 
+
+void Game::SetCompID(Component* component)
+{
+    if (!component->id)
+    {
+        component->id = ++idCount;
+    }
+
+    if (component->m_Name == "")
+    {
+        component->m_Name = "UNKNOWN";
+    }
+}
+
+
+std::string Game::GetCompIdentity(Component* component)
+{
+    return std::string(component->m_Name) + ":id=" + std::to_string(component->id);
+}
+
+bool Game::CheckCompIdentity(Component* component)
+{
+    if (!component->id)
+    {
+        g_Logger.Log(HFLog::HF_ERROR, "Tried to init component with no ID!", __FILE__, __LINE__);
+        return false;
+    }
+    else if (component->m_Name == "")
+    {
+        std::stringstream errorText;
+        errorText << "Tried to init component (id = " << component->id << ") with no name!";
+        g_Logger.Log(HFLog::HF_ERROR, errorText.str(), __FILE__, __LINE__);
+        return false;
+    }
+
+    return true;
+}
+
+
 void Game::AddComponent(Component* component)
 {
     m_Components.push_back(component);
 
-    g_Logger.Log(HFLog::HF_FILE_ONLY, "Added component...", __FILE__, __LINE__);
+    SetCompID(component);
+
+    std::stringstream message;
+    message << "Added component '" << GetCompIdentity(component) << "'.";
+    g_Logger.Log(HFLog::HF_FILE_ONLY, message.str(), __FILE__, __LINE__);
+}
+
+void Game::AddRenderComponent(RenderComponent* component)
+{
+    // if ( std::find(m_RenderComponents.begin(), m_RenderComponents.end(), component) != m_RenderComponents.end() )
+    if (
+        std::find_if(m_RenderComponents.begin(), m_RenderComponents.end(), [component](RenderComponent* c) { return c == component; }) != m_RenderComponents.end()
+    )
+    {
+        g_Logger.Log(HFLog::HF_WARNING, "Tried to add render component that is already registered!", __FILE__, __LINE__);
+        return;
+    }
+
+    m_RenderComponents.push_back(component);
+
+    switch (component->registeredWhere)
+    {
+        case READY:
+            component->registeredWhere = READYRENDER;
+            break;
+        
+        case UPDATE:
+            component->registeredWhere = UPDATERENDER;
+            break;
+
+        case READYUPDATE:
+            component->registeredWhere = READYUPDATERENDER;
+            break;
+        
+        case NOCALLBACK:
+            component->registeredWhere = COLLISION;
+            break;
+        
+        default:
+            break;
+    }
+
+    SetCompID(component);
+
+    std::stringstream message;
+    message << "Added render component '" << GetCompIdentity(component) << "'.";
+
+    g_Logger.Log(HFLog::HF_FILE_ONLY, message.str(), __FILE__, __LINE__);
+}
+
+void Game::AddCollisionComponent(CollisionComponent* component)
+{
+    // if ( std::find(m_CollisionComponents.begin(), m_CollisionComponents.end(), component) != m_CollisionComponents.end() )
+    if (
+        std::find_if(m_CollisionComponents.begin(), m_CollisionComponents.end(), [component](CollisionComponent* c) { return c == component; }) != m_CollisionComponents.end()
+    )
+    {
+        g_Logger.Log(HFLog::HF_WARNING, "Tried to add collision component that is already registered!", __FILE__, __LINE__);
+        return;
+    }
+
+    m_CollisionComponents.push_back(component);
+
+    switch (component->registeredWhere)
+    {
+        case READY:
+            component->registeredWhere = READYCOLLISION;
+            break;
+        
+        case UPDATE:
+            component->registeredWhere = UPDATECOLLISION;
+            break;
+
+        case READYUPDATE:
+            component->registeredWhere = READYUPDATECOLLISION;
+            break;
+        
+        case NOCALLBACK:
+            component->registeredWhere = COLLISION;
+            break;
+        
+        default:
+            break;
+    }
+
+    SetCompID(component);
+
+    std::stringstream message;
+    message << "Added collision component '" << GetCompIdentity(component) << "'.";
+
+    g_Logger.Log(HFLog::HF_FILE_ONLY, message.str(), __FILE__, __LINE__);
 }
 
 
@@ -44,6 +173,31 @@ void Game::InitComponents()
 {
     for (Component* component : m_Components)
     {
+        if (!CheckCompIdentity(component))
+        {
+            continue;
+        }
+
+        component->Init();
+    }
+
+    for (RenderComponent* component : m_RenderComponents)
+    {
+        if (!CheckCompIdentity(component))
+        {
+            continue;
+        }
+
+        component->Init();
+    }
+
+    for (CollisionComponent* component : m_CollisionComponents)
+    {
+        if (!CheckCompIdentity(component))
+        {
+            continue;
+        }
+
         component->Init();
     }
 
@@ -143,84 +297,6 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
             break;
     }
 }
-
-
-void Game::AddRenderComponent(RenderComponent* component)
-{
-    // if ( std::find(m_RenderComponents.begin(), m_RenderComponents.end(), component) != m_RenderComponents.end() )
-    if (
-        std::find_if(m_RenderComponents.begin(), m_RenderComponents.end(), [component](RenderComponent* c) { return c == component; }) != m_RenderComponents.end()
-    )
-    {
-        g_Logger.Log(HFLog::HF_WARNING, "Tried to add render component that is already registered!", __FILE__, __LINE__);
-        return;
-    }
-
-    m_RenderComponents.push_back(component);
-
-    switch (component->registeredWhere)
-    {
-        case READY:
-            component->registeredWhere = READYRENDER;
-            break;
-        
-        case UPDATE:
-            component->registeredWhere = UPDATERENDER;
-            break;
-
-        case READYUPDATE:
-            component->registeredWhere = READYUPDATERENDER;
-            break;
-        
-        case NOCALLBACK:
-            component->registeredWhere = COLLISION;
-            break;
-        
-        default:
-            break;
-    }
-
-    g_Logger.Log(HFLog::HF_FILE_ONLY, "Added render component.", __FILE__, __LINE__);
-}
-
-void Game::AddCollisionComponent(CollisionComponent* component)
-{
-    // if ( std::find(m_CollisionComponents.begin(), m_CollisionComponents.end(), component) != m_CollisionComponents.end() )
-    if (
-        std::find_if(m_CollisionComponents.begin(), m_CollisionComponents.end(), [component](CollisionComponent* c) { return c == component; }) != m_CollisionComponents.end()
-    )
-    {
-        g_Logger.Log(HFLog::HF_WARNING, "Tried to add collision component that is already registered!", __FILE__, __LINE__);
-        return;
-    }
-
-    m_CollisionComponents.push_back(component);
-
-    switch (component->registeredWhere)
-    {
-        case READY:
-            component->registeredWhere = READYCOLLISION;
-            break;
-        
-        case UPDATE:
-            component->registeredWhere = UPDATECOLLISION;
-            break;
-
-        case READYUPDATE:
-            component->registeredWhere = READYUPDATECOLLISION;
-            break;
-        
-        case NOCALLBACK:
-            component->registeredWhere = COLLISION;
-            break;
-        
-        default:
-            break;
-    }
-
-    g_Logger.Log(HFLog::HF_FILE_ONLY, "Added collision component.", __FILE__, __LINE__);
-}
-
 
 void Game::RemoveComponent(Component* component, CallbackType type)
 {

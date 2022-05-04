@@ -50,10 +50,16 @@ private:
 
     bool ComponentInVector(Component* component, std::vector<Component*> vector);
 
+    void SetCompID(Component* component);
+    std::string GetCompIdentity(Component* component);
+    bool CheckCompIdentity(Component* component);
+
     int m_ScreenWidth;
     int m_ScreenHeight;
 
     std::vector<Component*> m_Components;
+
+    int idCount = 0;
 
 public:
     Game(Game const&) = delete;

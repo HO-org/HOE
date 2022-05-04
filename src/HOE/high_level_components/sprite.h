@@ -5,8 +5,19 @@
 class Sprite : public RenderComponent
 {
 public:
-    Sprite();
-    ~Sprite();
+    Sprite()
+    {
+        m_Texture = NULL;
+        m_Width = 0;
+        m_Height = 0;
+
+        m_Name = "Sprite";
+    }
+
+    ~Sprite()
+    {
+        freeResources();
+    }
 
     bool load(SDL_Renderer** renderer, std::string path);
 

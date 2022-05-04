@@ -20,11 +20,24 @@ class CollisionComponent : public WorldComponent
         CollisionComponent()
         {
             m_Transform = HFTransform(); m_Size = HFMath::Vector2::ZERO();
+            m_Name = "CollisionComponent";
         }
-        
         CollisionComponent(HFMath::Vector2 position, HFMath::Vector2 size)
         {
             m_Transform.SetGlobalPosition(position); m_Size = size;
+            m_Name = "CollisionComponent";
+        }
+        CollisionComponent(std::string name)
+        {
+            m_Transform = HFTransform();
+            m_Size = HFMath::Vector2::ZERO();
+            m_Name = name;
+        }
+        CollisionComponent(HFMath::Vector2 position, HFMath::Vector2 size, std::string name)
+        {
+            m_Transform.SetGlobalPosition(position);
+            m_Size = size;
+            m_Name = name;
         }
 
         std::vector<CollisionComponent*> GetOverlappingComponents();

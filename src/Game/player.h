@@ -9,15 +9,19 @@
 class Player : public WorldComponent
 {
     public:
-        Player() {}
-
+        Player()
+        {
+            m_Name = "Player";
+        }
         Player(float Pos_X, float Pos_Y)
         {
             m_Transform.SetGlobalPosition(HFMath::Vector2(Pos_X, Pos_Y));
+            m_Name = "Player";
         }
-
-        Player(HFMath::Vector2 initialPos) { 
+        Player(HFMath::Vector2 initialPos)
+        { 
             m_Transform.SetGlobalPosition(initialPos);
+            m_Name = "Player";
         }
 
         virtual void Init();

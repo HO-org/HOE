@@ -7,5 +7,10 @@ class Game;
 class Camera : public WorldComponent
 {
 public:
+    Camera()
+    {
+        m_Name = "Camera";
+    }
+
     void SetCenter(HFMath::Vector2 targetPos);
 };
