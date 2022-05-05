@@ -3,6 +3,7 @@
 #include "game.h"
 #include "hfmath.h"
 #include "hflog.h"
+#include <math.h>
 
 
 bool Sprite::load(SDL_Renderer** renderer, std::string path)
@@ -71,7 +72,7 @@ void Sprite::Draw(SDL_Renderer** renderer, Camera* mainCamera)
     {
         pos = pos - mainCamera->m_Transform.GetGlobalPosition();
     }
-    SDL_Rect renderRect = { (int)pos.GetX(), (int)pos.GetY(), m_Width, m_Height };
+    SDL_Rect renderRect = { lround(pos.GetX()), lround(pos.GetY()), m_Width, m_Height };
     SDL_RenderCopy(*renderer, m_Texture, NULL, &renderRect);
 }
 

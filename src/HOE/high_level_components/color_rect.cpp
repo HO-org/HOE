@@ -1,4 +1,5 @@
 #include "color_rect.h"
+#include <math.h>
 
 
 void ColorRect::Draw(SDL_Renderer** renderer, Camera* mainCamera)
@@ -10,7 +11,7 @@ void ColorRect::Draw(SDL_Renderer** renderer, Camera* mainCamera)
         pos = pos - mainCamera->m_Transform.GetGlobalPosition();
     }
 
-    SDL_Rect rect = { (int)pos.GetX(), (int)pos.GetY(), (int)m_Size.GetX(), (int)m_Size.GetY() };
+    SDL_Rect rect = { lround(pos.GetX()), lround(pos.GetY()), lround(m_Size.GetX()), lround(m_Size.GetY()) };
     SDL_SetRenderDrawColor(*renderer,  m_Color.r, m_Color.g, m_Color.b, m_Color.a);
     SDL_RenderFillRect(*renderer, &rect);
 }
