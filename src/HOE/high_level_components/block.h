@@ -36,6 +36,7 @@ class Block : public RenderComponent
         HFMath::Vector2 GetSize();
         HFTransform m_Transform;
 
+        HFColor m_Color = { 255, 0, 0, 255 };
 
     private:
         virtual void Init() override;
@@ -43,7 +44,6 @@ class Block : public RenderComponent
         virtual void Draw(SDL_Renderer** renderer, Camera* mainCamera) override;
         virtual void Update() {}
 
-        HFColor m_Color = { 255, 0, 0, 255 };
 
         HFMath::Vector2 m_Size = HFMath::Vector2::ZERO();
 };
