@@ -42,8 +42,6 @@ class Player : public WorldComponent
 
         HFMath::Vector2 m_Velocity;
 
-        float m_CameraZoom = 2.0f;
-
         float m_MaxSpeed = 230.0f;
         float m_Acceleration = 10.0f;
         float m_Deceleration = 12.5f;
