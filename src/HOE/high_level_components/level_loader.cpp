@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "hflog.h"
 
 
 LevelLoader::LevelLoader()
@@ -15,15 +16,15 @@ LevelLoader::LevelLoader(int cellSize)
 }
 
 
-std::vector<Block> LevelLoader::loadBlocks(const char* filePath, char symbol)
+std::vector<Block> LevelLoader::loadBlocks(std::string filePath, char symbol)
 {
     std::vector<Block> blocks;
 
     std::ifstream file;
-    file.open(filePath);
+    file.open(filePath.c_str());
     if (!file.is_open())
     {
-        printf("HOE Error! Tried to load level but the file %s could not be opened!", filePath);
+        HFLog::GetInstance().Log(HFLog::HF_ERROR, std::string("Tried to load level but the file at '") + filePath + "' could not be opened!", __FILE__, __LINE__);
         return blocks;
     }
 

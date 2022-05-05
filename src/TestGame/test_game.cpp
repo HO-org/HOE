@@ -15,8 +15,7 @@ Game& g_Game = Game::GetInstance();
 void AddBlocks()
 {
     LevelLoader loader = LevelLoader(24);
-    char path[80];
-    sprintf(path, "%s/resources/level.hfl", SDL_GetBasePath());
+    std::string path = std::string(SDL_GetBasePath()) + "resources/level.hfl";
     g_Blocks = loader.loadBlocks(path, '#');
 
     HFMath::Vector2 offset = HFMath::Vector2(-8, 0);

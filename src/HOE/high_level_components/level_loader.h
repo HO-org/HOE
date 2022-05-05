@@ -8,7 +8,7 @@ class LevelLoader
 public:
     LevelLoader();
     LevelLoader(int cellSize);
-    std::vector<Block> loadBlocks(const char* filePath, char symbol);
+    std::vector<Block> loadBlocks(std::string filePath, char symbol);
 
 private:
     int m_CellSize;
