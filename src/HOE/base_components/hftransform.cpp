@@ -153,7 +153,7 @@ bool HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
             {
                 HFMath::Vector2 newPos = center;
 
-                float tolerance = 0.00005f;
+                float tolerance = 0.00001f * std::max(collider->m_Size.GetX(), collider->m_Size.GetY());
 
                 if (normal.GetX() != 0.0f)
                 {
