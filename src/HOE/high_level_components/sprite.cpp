@@ -65,6 +65,46 @@ void Sprite::freeResources()
     m_Height = 0;
 }
 
+
+void Sprite::DrawRepeat(SDL_Renderer** renderer, HFMath::Vector2 startPos)
+{
+    // int width = m_OverrideSize ? m_Width : lround(m_DrawSize.GetX());
+    // int height = m_OverrideSize ? m_Height : lround(m_DrawSize.GetY());
+
+    int widthSc = lround(m_Width * m_Scale.GetX());
+    int heightSc = lround(m_Height * m_Scale.GetY());
+
+    int drawWidth = 0;
+    int drawHeight = 0;
+    if (m_OverrideSize)
+    {
+        drawWidth = lround(m_DrawSize.GetX());
+        drawHeight = lround(m_DrawSize.GetY());
+    } else {
+        drawWidth = widthSc;
+        drawHeight = heightSc;
+    }
+
+    SDL_Rect rect = { lround(startPos.GetX()), lround(startPos.GetY()), widthSc, heightSc };
+    
+    int startX = rect.x;
+    int startY = rect.y;
+
+    int repeatW = drawWidth / widthSc;
+    int repeatH = drawHeight / heightSc;
+
+    for (int i = 0; i < repeatW; i++) {
+        rect.x = startX + widthSc * i;
+        SDL_RenderCopy(*renderer, m_Texture, NULL, &rect);
+
+        for (int j = 0; j < repeatH; j++) {
+            rect.y = startY + j * heightSc;
+            SDL_RenderCopy(*renderer, m_Texture, NULL, &rect);
+        }
+    }
+}
+
+
 void Sprite::Draw(SDL_Renderer** renderer, Camera* mainCamera)
 {
     HFMath::Vector2 pos = m_Transform.GetGlobalPosition();
@@ -72,7 +112,21 @@ void Sprite::Draw(SDL_Renderer** renderer, Camera* mainCamera)
     {
         pos = pos - mainCamera->m_Transform.GetGlobalPosition();
     }
-    SDL_Rect renderRect = { lround(pos.GetX()), lround(pos.GetY()), m_Width, m_Height };
+
+    if (m_Repeat)
+    {
+        DrawRepeat(renderer, pos);
+        return;
+    }
+
+    SDL_Rect renderRect = { lround(pos.GetX()), lround(pos.GetY()), lround(m_Width * m_Scale.GetX()), lround(m_Height * m_Scale.GetY()) };
+
+    if (m_OverrideSize)
+    {
+        renderRect.w = lround(m_DrawSize.GetX());
+        renderRect.h = lround(m_DrawSize.GetY());
+    }
+
     SDL_RenderCopy(*renderer, m_Texture, NULL, &renderRect);
 }
 
