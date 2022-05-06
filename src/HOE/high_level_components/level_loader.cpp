@@ -52,3 +52,38 @@ std::vector<Block> LevelLoader::loadBlocks(std::string filePath, char symbol)
 
     return blocks;
 }
+
+
+std::vector<HFMath::Vector2> LevelLoader::loadPositions(std::string filePath, char symbol)
+{
+    std::vector<HFMath::Vector2> positions;
+
+    std::ifstream file;
+    file.open(filePath.c_str());
+    if (!file.is_open())
+    {
+        HFLog::GetInstance().Log(HFLog::HF_ERROR, std::string("Tried to load level but the file at '") + filePath + "' could not be opened!", __FILE__, __LINE__);
+        return positions;
+    }
+
+    std::string line;
+
+    int lineNum = 1;
+    while (std::getline(file, line))
+    {
+        for (int i = 0; i < line.length(); i++)
+        {
+            char curSymbol = line.at(i);
+            if (curSymbol == symbol)
+            {
+                positions.push_back(HFMath::Vector2(i * m_CellSize, (lineNum - 1) * m_CellSize));
+            }
+        }
+
+        lineNum++;
+    }
+
+    file.close();
+
+    return positions;
+}

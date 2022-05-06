@@ -21,6 +21,12 @@ HFMath::Vector2 HFTransform::GetLocalPosition()
 }
 
 
+HFMath::Vector2 HFTransform::GetScale()
+{
+    return m_Scale;
+}
+
+
 HFTransform* HFTransform::GetParent()
 {
     return m_Parent;
@@ -46,6 +52,13 @@ void HFTransform::UpdatePositionInChildren()
         child->UpdatePosition();
     }
 }
+
+
+void HFTransform::SetScale(HFMath::Vector2 value)
+{
+    m_Scale = value;
+}
+
 
 void HFTransform::SetGlobalPosition(HFMath::Vector2 targetPos)
 {

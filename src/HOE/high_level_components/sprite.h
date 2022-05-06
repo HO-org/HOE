@@ -20,6 +20,7 @@ public:
     }
 
     bool load(SDL_Renderer** renderer, std::string path);
+    bool load(std::string path);
 
     void freeResources();
 

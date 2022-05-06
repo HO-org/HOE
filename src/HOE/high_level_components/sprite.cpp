@@ -52,6 +52,52 @@ bool Sprite::load(SDL_Renderer** renderer, std::string path)
     return true;
 }
 
+bool Sprite::load(std::string path)
+{
+    const char* prevQuality = SDL_GetHint(SDL_HINT_RENDER_SCALE_QUALITY);
+    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "0" ) )
+    {
+        HFLog::GetInstance().Log(HFLog::HF_WARNING, std::string("Could not set render scale quality! SDL Error: ") + SDL_GetError(), __FILE__, __LINE__);
+    }
+
+    if(m_Texture != NULL)
+    {
+        freeResources();
+    }
+
+    SDL_Texture* texture = NULL;
+
+    SDL_Surface* surface = IMG_Load(path.c_str());
+    if (surface == NULL)
+    {
+        printf("Could not load image at %s. IMG_Load Error: %s\n", path.c_str(), IMG_GetError());
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, prevQuality);
+        return false;
+    }
+
+    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0, 255, 255));
+
+    texture = SDL_CreateTextureFromSurface(*Game::GetInstance().m_CurRenderer, surface);
+    if (texture == NULL)
+    {
+        printf("Could not create texture from %s. SDL Error: %s\n", path.c_str(), SDL_GetError());
+        SDL_FreeSurface(surface);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, prevQuality);
+        return false;
+    }
+
+    m_Width = surface->w;
+    m_Height = surface->h;
+
+    SDL_FreeSurface(surface);
+
+    m_Texture = texture;
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, prevQuality);
+
+    return true;
+}
+
 void Sprite::freeResources()
 {
     if (m_Texture == NULL)

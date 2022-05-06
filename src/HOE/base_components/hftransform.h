@@ -21,6 +21,9 @@ class HFTransform : public Component
         HFMath::Vector2 GetGlobalPosition();
         HFMath::Vector2 GetLocalPosition();
 
+        void SetScale(HFMath::Vector2 value);
+        HFMath::Vector2 GetScale();
+
         void UpdatePosition();
 
         bool MoveAndCollide(HFMath::Vector2 targetPos);
@@ -45,6 +48,8 @@ class HFTransform : public Component
 
         HFMath::Vector2 m_LocalPosition;
         HFMath::Vector2 m_GlobalPosition;
+
+        HFMath::Vector2 m_Scale = HFMath::Vector2(1.0f, 1.0f);
 
         HFTransform* m_Parent = nullptr;
         std::vector<HFTransform*> m_Children;
