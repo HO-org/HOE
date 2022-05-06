@@ -95,6 +95,12 @@ void HFTransform::UpdatePosition()
 }
 
 
+void HFTransform::Move(HFMath::Vector2 amount)
+{
+    SetGlobalPosition(GetGlobalPosition() + amount);
+}
+
+
 bool HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
 {
     HFMath::Vector2 originalPos = GetGlobalPosition();

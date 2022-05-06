@@ -21,6 +21,8 @@ class HFTransform : public Component
         HFMath::Vector2 GetGlobalPosition();
         HFMath::Vector2 GetLocalPosition();
 
+        void Move(HFMath::Vector2 amount);
+
         void SetScale(HFMath::Vector2 value);
         HFMath::Vector2 GetScale();
 
