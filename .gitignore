@@ -25,3 +25,4 @@ logs/*
 *.projdir
 *.projname
 game_proj_files/build.bat
+game_proj_files/build

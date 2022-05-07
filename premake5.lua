@@ -12,6 +12,8 @@ project "HOEngine"
     language "C++"
     targetdir "%{game_folder}"
 
+    linkoptions { "-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic" }
+
     include(game_premake)
 
     -- include(game_dir .. "/" .. game_name .. "/premake5.lua")
