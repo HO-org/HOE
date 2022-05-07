@@ -1,6 +1,8 @@
+from platform import platform
 import sys
 import os
 import shutil
+import platform
 
 
 def try_copy_tree(source, target):
@@ -65,14 +67,29 @@ def main():
     proj_path = project_dir + project_name
 
     base_build_bat = f"cd {os.path.abspath(os.curdir)}\n{os.path.abspath(os.curdir)}\\build.bat %*\ncd {proj_path}"
+    base_build_bash = f'''#!/bin/bash
+rm ./*.dll
+cd {os.path.abspath(os.curdir)}
+./build "$@"
+cd {proj_path}'''
 
     f_build_batch = open(os.curdir + "/game_proj_files/build.bat", "w")
     f_build_batch.write(base_build_bat)
     f_build_batch.close()
+
+    script_path = os.curdir + "/game_proj_files/build"
+
+    f_build_bash = open(script_path, "w")
+    f_build_bash.write(base_build_bash)
+    f_build_bash.close()
+
+    if platform.system() == "Linux":
+        os.system(f"chmod +x {script_path}")
 
     try_copy_tree(os.curdir + "/game_proj_files", proj_path)
 
 
 if (__name__ == "__main__"):
     main()
+
 
