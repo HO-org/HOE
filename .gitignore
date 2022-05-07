@@ -18,3 +18,10 @@ Makefile
 
 # Logs
 logs/*
+
+
+# Build generated files
+*.engname
+*.projdir
+*.projname
+game_proj_files/build.bat

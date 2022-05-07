@@ -3,9 +3,19 @@ workspace "HOEngine"
     architecture "x86_64"
 
 project "HOEngine"
+    game_name = io.readfile("game_name.projname")
+    game_dir = path.getrelative(".", io.readfile("game_dir.projdir"))
+    game_folder = "%{game_dir}/" .. "%{game_name}"
+    game_premake = string.format("%s/%s/premake5.lua", game_dir, game_name)
+
     kind "ConsoleApp"
     language "C++"
-    targetdir "."
+    targetdir "%{game_folder}"
+
+    include(game_premake)
+
+    -- include(game_dir .. "/" .. game_name .. "/premake5.lua")
+    -- include(string.explode(game_premake, "\n")[0])
 	
     -- libdirs { "lib", "../lib", "vendor/SDL2-2.0.20/x86_64-w64-mingw32/lib", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/lib" }
     -- libdirs { "vendor/**" }
@@ -22,7 +32,7 @@ project "HOEngine"
 
         links { "mingw32", "SDL2main", "SDL2", "SDL2_image" }
     	
-    	targetname "HOEngine"
+    	targetname "%{game_name}"
 	
 	filter "system:linux"
         -- SDL2 related includes
@@ -35,14 +45,14 @@ project "HOEngine"
     	
         links { "SDL2", "SDL2_image" }
     	
-    	targetname "HOEngine.game"
+    	targetname "%{game_name}.game"
 --		includedirs { "include/SDL2-linux" }
     filter {}
 
-    includedirs { "src/**" }
+    includedirs { "src/**", "%{game_folder}" .. "/**" }
 	
     files { "vendor/loguru-2.1.0/loguru.cpp" }
-    files { "src/**.h", "src/**.cpp" }
+    files { "src/**.h", "src/**.cpp", "%{game_folder}" .. "/**.h", "%{game_folder}" .. "/**.cpp" }
 
     removefiles { "deprecated/**.h", "deprecated/**.cpp" }
 
