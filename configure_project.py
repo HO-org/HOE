@@ -73,6 +73,22 @@ cd {os.path.abspath(os.curdir)}
 ./build "$@"
 cd {proj_path}'''
 
+    fixed_path = os.path.abspath(os.curdir).replace("\\", "/")
+    base_vscode_cpp_prop = f'''
+{{
+"configurations": [
+    {{
+        "name": "default",
+        "includePath": [
+            "{fixed_path}/**", "./src/**"
+        ],
+        "intelliSenseMode": "gcc-x64",
+        "cppStandard": "c++17"
+    }}
+],
+"version": 4
+}}'''
+
     f_build_batch = open(os.curdir + "/game_proj_files/build.bat", "w")
     f_build_batch.write(base_build_bat)
     f_build_batch.close()
@@ -85,6 +101,12 @@ cd {proj_path}'''
 
     if platform.system() == "Linux":
         os.system(f"chmod +x {script_path}")
+
+    os.makedirs(os.curdir + "/game_proj_files/.vscode", exist_ok=True)
+    f_vscode_cpp_prop = open(os.curdir + "/game_proj_files/.vscode/c_cpp_properties.json", "w")
+    f_vscode_cpp_prop.write(base_vscode_cpp_prop)
+    f_vscode_cpp_prop.close()
+
 
     try_copy_tree(os.curdir + "/game_proj_files", proj_path)
 

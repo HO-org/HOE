@@ -1,0 +1,14 @@
+
+{
+"configurations": [
+    {
+        "name": "default",
+        "includePath": [
+            "C:/Dev/HOE/HOE_DeepTalk/**", "./src/**"
+        ],
+        "intelliSenseMode": "gcc-x64",
+        "cppStandard": "c++17"
+    }
+],
+"version": 4
+}

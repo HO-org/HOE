@@ -1,6 +1,6 @@
-#include <iostream>
+#include "hflog.h"
 
 void HOEINIT_AddComponents()
 {
-    std::cout << "Hello World" << std::endl;
+    HFLog::GetInstance().Log(HFLog::HF_ERROR, "Hello World!", __FILE__, __LINE__);
 }
