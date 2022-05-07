@@ -2,22 +2,32 @@ import sys
 import os
 import shutil
 
+
 def try_copy_tree(source, target):
+    if (os.path.isdir(target)):
+        req = input("Folder at '" + target + "' exists, PROCEEDING WILL DELETE AND REPLACE IT! Y/n ")
+        if req.lower().startswith("y"):
+            shutil.rmtree(target)
+        else:
+            quit()
+    
     try:
         shutil.copytree(source, target)
     except FileExistsError:
-        req = input("Folder at '" + target + "' exists, do you want to override it? Y/n ")
-        if req.startswith("y".lower()):
-            pass
-        else:
-            quit()
+        print("Could not copy tree because the folder exists")
+        quit()
+    except PermissionError:
+        req = input("A required file or folder is in use... retry? Y/n ")
+        if req.lower().startswith("y"):
+            try_copy_tree(source, target)
+
 
 def try_make_dir(path):
     try:
         os.mkdir(path)
     except FileExistsError:
         req = input("Folder at '" + path + "' exists, do you want to override it? Y/n ")
-        if req.startswith("y".lower()):
+        if req.lower().startswith("y"):
             pass
         else:
             quit()
@@ -48,26 +58,19 @@ def main():
     f_proj_name.write(project_name)
     f_proj_name.close()
 
+    f_engine_fold = open(os.curdir + "/game_proj_files/engine_folder.engname", "w")
+    f_engine_fold.write(os.path.abspath(os.curdir))
+    f_engine_fold.close()
+
     proj_path = project_dir + project_name
 
-    try_make_dir(proj_path)
+    base_build_bat = f"cd {os.path.abspath(os.curdir)}\n{os.path.abspath(os.curdir)}\\build.bat %*\ncd {proj_path}"
 
-    dll_path = os.curdir + "/vendor/runtime"
-    for dll in os.listdir(dll_path):
-        shutil.copy(dll, proj_path)
-    
-    resource_path = os.curdir + "/resources"
-    try_copy_tree(resource_path, proj_path + "/resources")
-    
-    try_make_dir(proj_path + "/src")
-    shutil.copy(os.curdir + "/example_entry.cppexm", proj_path + "/src/entry_point.cpp")
+    f_build_batch = open(os.curdir + "/game_proj_files/build.bat", "w")
+    f_build_batch.write(base_build_bat)
+    f_build_batch.close()
 
-    f_premake5 = open(proj_path + "/premake5.lua", "w")
-    f_premake5.close()
-    
-
-
-
+    try_copy_tree(os.curdir + "/game_proj_files", proj_path)
 
 
 if (__name__ == "__main__"):
