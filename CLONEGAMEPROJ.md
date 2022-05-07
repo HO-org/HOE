@@ -15,3 +15,5 @@ Copy the created project's contents, except for the folders ```src, resources```
 If asked do not overwrite files.
 
 Delete the generated project and rename the repository folder to ```{PROJ_NAME}```
+
+You can now compile the game using the [build script](https://github.com/HO-org/HOE/blob/master/README.md#the-build-script)!
