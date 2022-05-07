@@ -7,6 +7,8 @@ It currently uses a component system that is a mix of composition and inheritanc
 
 It has a fixed-timestep game loop, and the non-fixed-update loop is currently unavailable due to issues with input, that might or might not be sorted out.
 
+[The example game](https://github.com/hohfchns/HOETestGame)
+
 ## Compiling
 Currently the engine and game are a part of the same "project", and need to be compiled as one.
 
