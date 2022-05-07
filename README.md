@@ -35,6 +35,8 @@ The executable can be moved or shipped as long as the ```resources``` folder, an
 ## Compiling on Windows 10 ##
 
 ### Requirements ###
+[7zip](https://www.7-zip.org/download.html) (Could also be subsituted with any archive software)
+
 MinGW-w64 ([Installation Instructions](https://github.com/hohfchns/HOE/blob/master/INSTALLMINGW64.md))
 
 [git](https://git-scm.com/downloads)
