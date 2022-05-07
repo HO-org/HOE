@@ -49,7 +49,7 @@ project "HOEngine"
 --		includedirs { "include/SDL2-linux" }
     filter {}
 
-    includedirs { "src/**", "{game_folder}" }
+    includedirs { "src/**", "%{game_folder}" .. "/**" }
 	
     files { "vendor/loguru-2.1.0/loguru.cpp" }
     files { "src/**.h", "src/**.cpp", "%{game_folder}" .. "/**.h", "%{game_folder}" .. "/**.cpp" }
