@@ -19,8 +19,8 @@ public:
         freeResources();
     }
 
-    bool load(SDL_Renderer** renderer, std::string path);
-    bool load(std::string path);
+    virtual bool load(SDL_Renderer** renderer, std::string path);
+    virtual bool load(std::string path);
 
     void freeResources();
 
@@ -38,6 +38,6 @@ public:
 
     HFMath::Vector2 m_Scale = HFMath::Vector2(1.0f, 1.0f);
 
-private:
+protected:
     int m_Width, m_Height;
 };
