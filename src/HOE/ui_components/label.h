@@ -24,9 +24,9 @@ public:
     }
 
     bool refresh();
+    bool refresh(SDL_Renderer** renderer);
 
-    bool load(SDL_Renderer** renderer, std::string path) override;
-    bool load(std::string path) override;
+    bool loadFont(std::string path);
 
     void setColor(HFColor color);
     void setText(std::string text);
@@ -38,6 +38,4 @@ private:
     std::string m_Text;
     
     SDL_Color m_Color;
-
-    std::string m_PathCache;
 };
