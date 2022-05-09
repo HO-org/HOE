@@ -1,5 +1,6 @@
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include "game.h"
 #include "enums.h"
 #include "hf_input.h"
@@ -142,6 +143,12 @@ static bool init(SDL_Window** window, SDL_Renderer** renderer)
         return false;
     }
 
+    if ( TTF_Init() == -1 )
+    {
+        g_Logger.Log(HFLog::HF_ERROR, std::string("SDL_ttf could not initialize! SDL_ttf Error: ") + TTF_GetError(), __FILE__, __LINE__);
+        return false;
+    }
+
     return true;
 }
 
@@ -155,6 +162,7 @@ static void quit(SDL_Renderer** renderer, SDL_Window** window)
     *window = NULL;
     *renderer = NULL;
 
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }

@@ -1,6 +1,7 @@
 #pragma once
+#include <stdint.h>
 
 struct HFColor
 {
-    int r, g, b, a;
+    uint8_t r, g, b, a;
 };

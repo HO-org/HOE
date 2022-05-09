@@ -16,23 +16,17 @@ project "HOEngine"
 
     include(game_premake)
 
-    -- include(game_dir .. "/" .. game_name .. "/premake5.lua")
-    -- include(string.explode(game_premake, "\n")[0])
-	
-    -- libdirs { "lib", "../lib", "vendor/SDL2-2.0.20/x86_64-w64-mingw32/lib", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/lib" }
-    -- libdirs { "vendor/**" }
-    
 	filter "system:windows"
         -- SDL2 related includes
-	    includedirs { "vendor/SDL2-2.0.20/x86_64-w64-mingw32/include/SDL2", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/include/SDL2" }
+	    includedirs { "vendor/SDL2-2.0.20/x86_64-w64-mingw32/include/SDL2", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/include/SDL2", "vendor/SDL2_ttf-2.0.18/x86_64-w64-mingw32/include/SDL2" }
         -- Other includes
         includedirs { "vendor/loguru-2.1.0" }
 	    
-	    libdirs { "vendor/SDL2-2.0.20/x86_64-w64-mingw32/**", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/**" }
+	    libdirs { "vendor/SDL2-2.0.20/x86_64-w64-mingw32/**", "vendor/SDL2_image-2.0.5/x86_64-w64-mingw32/**", "vendor/SDL2_ttf-2.0.18/x86_64-w64-mingw32/**" }
         
         removelibdirs { "vendor/runtime/**" }
 
-        links { "mingw32", "SDL2main", "SDL2", "SDL2_image" }
+        links { "mingw32", "SDL2main", "SDL2", "SDL2_image", "SDL2_ttf" }
     	
     	targetname "%{game_name}"
 	
