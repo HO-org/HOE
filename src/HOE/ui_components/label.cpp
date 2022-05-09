@@ -3,16 +3,9 @@
 #include "hflog.h"
 
 
-bool Label::load(SDL_Renderer** renderer, std::string path)
+bool Label::refresh(SDL_Renderer** renderer)
 {
     HFLog& logger = HFLog::GetInstance();
-
-    m_Font = TTF_OpenFont(path.c_str(), m_FontSize);
-    if (m_Font == NULL)
-    {
-        logger.Log(HFLog::HF_ERROR, std::string("Failed to load font! SDL_ttf Error: ") + TTF_GetError(), __FILE__, __LINE__);
-        return false;
-    }
 
     if (m_Texture != NULL)
     {
@@ -40,19 +33,27 @@ bool Label::load(SDL_Renderer** renderer, std::string path)
 
     SDL_FreeSurface( textSurface );
 
-    m_PathCache = path;
-
     return true;
-}
-
-bool Label::load(std::string path)
-{
-    return load(Game::GetInstance().m_CurRenderer, path);
 }
 
 bool Label::refresh()
 {
-    return load(m_PathCache);
+    return refresh(Game::GetInstance().m_CurRenderer);
+}
+
+
+bool Label::loadFont(std::string path)
+{
+    HFLog& logger = HFLog::GetInstance();
+
+    m_Font = TTF_OpenFont(path.c_str(), m_FontSize);
+    if (m_Font == NULL)
+    {
+        logger.Log(HFLog::HF_ERROR, std::string("Failed to load font! SDL_ttf Error: ") + TTF_GetError(), __FILE__, __LINE__);
+        return false;
+    }
+
+    return true;
 }
 
 
