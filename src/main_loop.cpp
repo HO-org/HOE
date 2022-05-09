@@ -162,6 +162,7 @@ static void quit(SDL_Renderer** renderer, SDL_Window** window)
     *window = NULL;
     *renderer = NULL;
 
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }
