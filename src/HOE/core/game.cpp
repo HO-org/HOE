@@ -89,7 +89,7 @@ void Game::AddRenderComponent(RenderComponent* component)
         std::find_if(m_RenderComponents.begin(), m_RenderComponents.end(), [component](RenderComponent* c) { return c == component; }) != m_RenderComponents.end()
     )
     {
-        g_Logger.Log(HFLog::HF_WARNING, "Tried to add render component that is already registered!", __FILE__, __LINE__);
+        g_Logger.Log(HFLog::HF_WARNING, std::string("Tried to add render component ") + "'" + GetCompIdentity(component) + "' that is already registered!", __FILE__, __LINE__);
         return;
     }
 
@@ -132,7 +132,7 @@ void Game::AddCollisionComponent(CollisionComponent* component)
         std::find_if(m_CollisionComponents.begin(), m_CollisionComponents.end(), [component](CollisionComponent* c) { return c == component; }) != m_CollisionComponents.end()
     )
     {
-        g_Logger.Log(HFLog::HF_WARNING, "Tried to add collision component that is already registered!", __FILE__, __LINE__);
+        g_Logger.Log(HFLog::HF_WARNING, std::string("Tried to add collision component ") + "'" + GetCompIdentity(component) + "' that is already registered!", __FILE__, __LINE__);
         return;
     }
 
@@ -265,7 +265,7 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
         case UPDATE:
             if (ComponentInVector(component, m_UpdateComponents)) 
             { 
-                printf("Component already registered as an update component!");
+                g_Logger.Log(HFLog::HF_WARNING, std::string("Component ") + "'" + GetCompIdentity(component) + "' already registered as an update component!", __FILE__, __LINE__);
                 break;
             }
 
@@ -277,7 +277,7 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
         case READY:
             if (ComponentInVector(component, m_ReadyComponents)) 
             { 
-                printf("Component already registered as a ready component!");
+                g_Logger.Log(HFLog::HF_WARNING, std::string("Component ") + "'" + GetCompIdentity(component) + "' already registered as a ready component!", __FILE__, __LINE__);
                 break;
             }
 
@@ -288,7 +288,7 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
         case READYUPDATE:
             if (ComponentInVector(component, m_UpdateComponents) || ComponentInVector(component, m_ReadyComponents)) 
             { 
-                printf("Component already registered as an update/ready component!");
+                g_Logger.Log(HFLog::HF_WARNING, std::string("Component ") + "'" + GetCompIdentity(component) + "' already registered as an update/ready component!", __FILE__, __LINE__);
                 break;
             }
 
@@ -298,7 +298,8 @@ void Game::AddComponentCallback(Component* component, CallbackType type)
             break;
 
         default:
-            printf("Tried to add a component with an invalid type passed");
+            g_Logger.Log(HFLog::HF_WARNING, "Tried to add a component with an invalid type passed", __FILE__, __LINE__);
+
             break;
     }
 }
