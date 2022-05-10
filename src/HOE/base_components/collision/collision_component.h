@@ -1,6 +1,8 @@
 #pragma once
 #include "world_component.h"
 #include "hftransform.h"
+#include "color_rect.h"
+#include "misc.h"
 #include "hfmath.h"
 
 
@@ -40,6 +42,8 @@ class CollisionComponent : public WorldComponent
             m_Name = name;
         }
 
+        void Init() override;
+
         std::vector<CollisionComponent*> GetOverlappingComponents();
         bool IsOverlapping(CollisionComponent* other);
 
@@ -51,4 +55,9 @@ class CollisionComponent : public WorldComponent
         CollidingSides GetCollidingSides(CollisionComponent* other);
 
         HFMath::Vector2 GetCollisionNormal(HFMath::Vector2 from);
+
+        bool m_ShowVisual = false;
+        ColorRect m_Visualizer;
+
+private:
 };

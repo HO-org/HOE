@@ -1,6 +1,18 @@
 #include "collision_component.h"
 #include "game.h"
 
+void CollisionComponent::Init()
+{
+    Game& game = Game::GetInstance();
+
+    if (game.m_ForceCollisionVisuals || m_ShowVisual)
+    {
+        m_Visualizer = ColorRect(m_Transform.GetGlobalPosition(), m_Size, "CollisionVisualizer", { 0, 70, 255, 50 });
+        m_Transform.AddChild(&m_Visualizer.m_Transform);
+        game.AddRenderComponent(&m_Visualizer);
+    }
+}
+
 
 std::vector<CollisionComponent*> CollisionComponent::GetOverlappingComponents()
 {

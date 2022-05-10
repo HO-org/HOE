@@ -48,6 +48,8 @@ public:
 
     const char* RENDER_SCALE_MODE = "1";
 
+    bool m_ForceCollisionVisuals = false;
+
 private:
     Game() {} ;
 
