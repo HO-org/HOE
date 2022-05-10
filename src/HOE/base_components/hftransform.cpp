@@ -104,32 +104,37 @@ void HFTransform::Move(HFMath::Vector2 amount)
 
 bool HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
 {
-    HFMath::Vector2 originalPos = GetGlobalPosition();
-
-    SetGlobalPosition(targetPos);
-
-    HFMath::Vector2 normal;
-
     for ( CollisionComponent* collider : m_Colliders )
     {
+        HFMath::Vector2 startPos = collider->m_Transform.GetGlobalPosition();
+        HFMath::Vector2 colOffset = GetGlobalPosition() - collider->m_Transform.GetGlobalPosition();
+
+        SetGlobalPosition(targetPos);
+
+        HFMath::Vector2 colTarPos = targetPos - colOffset;
+
+        HFMath::Vector2 normal;
+
+        float minDist = 0.0005f;
+
         std::vector<CollisionComponent*> overlaps = collider->GetOverlappingComponents();
         for ( CollisionComponent* overlap : overlaps )
         {
-            HFMath::Vector2 center = originalPos + collider->m_Size / 2;
+            HFMath::Vector2 center = startPos + collider->m_Size / 2;
             HFMath::Vector2 overlapCenter = overlap->m_Transform.GetGlobalPosition() + overlap->m_Size / 2;
             HFMath::Vector2 diff = center - overlapCenter;
 
             bool diffPointingRight = diff.GetX() > 0;
             bool diffPointingLeft = diff.GetX() < 0;
             bool isInHeight = abs(diff.GetY()) <= overlap->m_Size.GetY() / 2 + collider->m_Size.GetY() / 2;
-            bool velocityGoingLeft = (targetPos - originalPos).GetX() < 0;
-            bool velocityGoingRight = (targetPos - originalPos).GetX() > 0;
+            bool velocityGoingLeft = (colTarPos - startPos).GetX() < 0;
+            bool velocityGoingRight = (colTarPos - startPos).GetX() > 0;
 
             bool diffPointingUp = diff.GetY() < 0;
             bool diffPointingDown = diff.GetY() > 0;
             bool isInWidth = abs(diff.GetX()) <= overlap->m_Size.GetX() / 2 + collider->m_Size.GetX() / 2;
-            bool velocityGoingDown = (targetPos - originalPos).GetY() > 0;
-            bool velocityGoingUp = (targetPos - originalPos).GetY() < 0;
+            bool velocityGoingDown = (colTarPos - startPos).GetY() > 0;
+            bool velocityGoingUp = (colTarPos - startPos).GetY() < 0;
 
             if (diffPointingRight
             && isInHeight
@@ -160,22 +165,22 @@ bool HFTransform::MoveAndCollide(HFMath::Vector2 targetPos)
             {
                 HFMath::Vector2 newPos = center;
 
-                float tolerance = 0.00001f * std::max(collider->m_Size.GetX(), collider->m_Size.GetY());
+                float tolerance = 0.00005f * std::max(collider->m_Size.GetX(), collider->m_Size.GetY());
 
-                if (normal.GetX() != 0.0f)
+                if (HFMath::fdist(normal.GetX(), 0.f) >= minDist);
                 {
                     newPos.SetX(overlapCenter.GetX() + normal.GetX() * (overlap->m_Size.GetX() / 2 + collider->m_Size.GetX() / 2 + tolerance));
                     newPos.SetY(center.GetY());
                 }
-                if (normal.GetY() != 0.0f)
+                if (HFMath::fdist(normal.GetY(), 0.f) >= minDist)
                 {
-                    newPos.SetX(center.GetX());
                     newPos.SetY(overlapCenter.GetY() + normal.GetY() * (overlap->m_Size.GetY() / 2 + collider->m_Size.GetY() / 2 + tolerance));
+                    newPos.SetX(center.GetX());
                 }
 
-                if (newPos.GetX() != 0.0f || newPos.GetY() != 0.0f)
+                if (HFMath::fdist(newPos.GetX(), 0.f) >= minDist || HFMath::fdist(newPos.GetY(), 0.f) >= minDist)
                 {
-                    SetGlobalPosition(newPos - collider->m_Size / 2);
+                    SetGlobalPosition((newPos - collider->m_Size / 2) + colOffset);
                 }
             }
             // If we have a collision 

@@ -17,6 +17,11 @@ namespace HFMath
         return (from * (1.0f - delta)) + (to * delta);
     }
 
+    inline float fdist(float from, float to)
+    {
+        return abs(to - from);
+    }
+
     class Vector2
     {
     public:
