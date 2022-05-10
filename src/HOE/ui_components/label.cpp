@@ -65,5 +65,11 @@ void Label::setColor(HFColor color)
 
 void Label::setText(std::string text)
 {
+    if (text == "")
+    {
+        m_Text = " ";
+        return;
+    }
+    
     m_Text = text;
 }
