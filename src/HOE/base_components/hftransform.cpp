@@ -91,7 +91,8 @@ void HFTransform::UpdatePosition()
     {
         return;
     }
-    m_GlobalPosition = m_Parent->GetGlobalPosition() + m_LocalPosition;
+    
+    SetGlobalPosition(m_Parent->GetGlobalPosition() + m_LocalPosition);
 }
 
 
