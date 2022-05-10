@@ -5,12 +5,21 @@ void CollisionComponent::Init()
 {
     Game& game = Game::GetInstance();
 
+    #ifndef NDEBUG
     if (game.m_ForceCollisionVisuals || m_ShowVisual)
     {
         m_Visualizer = ColorRect(m_Transform.GetGlobalPosition(), m_Size, "CollisionVisualizer", { 0, 70, 255, 50 });
         m_Transform.AddChild(&m_Visualizer.m_Transform);
         game.AddRenderComponent(&m_Visualizer);
     }
+    #endif
+}
+
+
+void CollisionComponent::SetSize(HFMath::Vector2 size)
+{
+    m_Size = size;
+    m_Visualizer.m_Size = size;
 }
 
 

@@ -50,6 +50,8 @@ class CollisionComponent : public WorldComponent
         HFTransform m_Transform;
         HFMath::Vector2 m_Size = HFMath::Vector2::ZERO();
 
+        void SetSize(HFMath::Vector2 size);
+
         void GetPoints(HFMath::Vector2* out_Points);
 
         CollidingSides GetCollidingSides(CollisionComponent* other);
