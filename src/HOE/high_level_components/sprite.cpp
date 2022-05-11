@@ -117,21 +117,21 @@ void Sprite::DrawRepeat(SDL_Renderer** renderer, HFMath::Vector2 startPos)
     // int width = m_OverrideSize ? m_Width : lround(m_DrawSize.GetX());
     // int height = m_OverrideSize ? m_Height : lround(m_DrawSize.GetY());
 
-    int widthSc = lround(m_Width * m_Scale.GetX());
-    int heightSc = lround(m_Height * m_Scale.GetY());
+    int widthSc = (int)round(m_Width * m_Scale.GetX());
+    int heightSc = (int)round(m_Height * m_Scale.GetY());
 
     int drawWidth = 0;
     int drawHeight = 0;
     if (m_OverrideSize)
     {
-        drawWidth = lround(m_DrawSize.GetX());
-        drawHeight = lround(m_DrawSize.GetY());
+        drawWidth = (int)round(m_DrawSize.GetX());
+        drawHeight = (int)round(m_DrawSize.GetY());
     } else {
         drawWidth = widthSc;
         drawHeight = heightSc;
     }
 
-    SDL_Rect rect = { lround(startPos.GetX()), lround(startPos.GetY()), widthSc, heightSc };
+    SDL_Rect rect = { (int)round(startPos.GetX()), (int)round(startPos.GetY()), widthSc, heightSc };
     
     int startX = rect.x;
     int startY = rect.y;
@@ -165,12 +165,12 @@ void Sprite::Draw(SDL_Renderer** renderer, Camera* mainCamera)
         return;
     }
 
-    SDL_Rect renderRect = { lround(pos.GetX()), lround(pos.GetY()), lround(m_Width * m_Scale.GetX()), lround(m_Height * m_Scale.GetY()) };
+    SDL_Rect renderRect = { (int)round(pos.GetX()), (int)round(pos.GetY()), (int)round(m_Width * m_Scale.GetX()), (int)round(m_Height * m_Scale.GetY()) };
 
     if (m_OverrideSize)
     {
-        renderRect.w = lround(m_DrawSize.GetX());
-        renderRect.h = lround(m_DrawSize.GetY());
+        renderRect.w = (int)round(m_DrawSize.GetX());
+        renderRect.h = (int)round(m_DrawSize.GetY());
     }
 
     SDL_RenderCopy(*renderer, m_Texture, NULL, &renderRect);

@@ -32,7 +32,7 @@ void Block::Draw(SDL_Renderer** renderer, Camera* mainCamera)
     {
         pos = pos - mainCamera->m_Transform.GetGlobalPosition();
     }
-    SDL_Rect drawRect = { lround(pos.GetX()), lround(pos.GetY()), lround(m_Size.GetX()), lround(m_Size.GetY()) };
+    SDL_Rect drawRect = { (int)round(pos.GetX()), (int)round(pos.GetY()), (int)round(m_Size.GetX()), (int)round(m_Size.GetY()) };
     SDL_SetRenderDrawColor(*renderer, m_Color.r, m_Color.g, m_Color.b, m_Color.a);
     SDL_RenderFillRect(*renderer, &drawRect);
 }
